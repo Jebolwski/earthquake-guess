@@ -10,25 +10,24 @@ from django.http import JsonResponse
 from .models import Building
 from .serializers import BuildingSerializer
 from rest_framework.decorators import api_view
+from django.utils.timezone import now
 
+xg_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\xgboost.pkl"
+dt_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\decision_tree.pkl"
+rf_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\random_forest.pkl"
+lr_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\logistic_regression.pkl"
 
-# xg_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\term2\server\earthquakeapi\app\models\xgboost_model.pkl"
-dt_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\term2\server\earthquakeapi\app\models\decision_tree.pkl"
-rf_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\term2\server\earthquakeapi\app\models\random_forest.pkl"
-# lr_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\term2\server\earthquakeapi\app\models\logistic_regression.pkl"
-
-# xg_model = joblib.load(xg_model_path)
+xg_model = joblib.load(xg_model_path)
 dt_model = joblib.load(dt_model_path)
 rf_model = joblib.load(rf_model_path)
-# lr_model = joblib.load(lr_model_path)
+lr_model = joblib.load(lr_model_path)
 
 # Kategorik değişkenler için encoding sözlükleri
 foundation_type_encoding = {
-    "Other": 0,
-    "Mud mortar-Stone/Brick": 1,
-    "Cement-Stone/Brick": 2,
-    "Bamboo/Timber": 3,
-    "RC": 4,
+    "Mud mortar-Stone/Brick": 0,
+    "Cement-Stone/Brick": 1,
+    "Bamboo/Timber": 2, 
+    "RC": 3,
 }
 
 roof_type_encoding = {
@@ -48,21 +47,20 @@ ground_floor_type_encoding = {
     "RC": 1,
     "Brick/Stone": 2,
     "Timber": 3,
-    "Other": 4,
 }
 
 models = {
-    # "XGBoost": xg_model,
+    "XGBoost": xg_model,
     "Decision Tree": dt_model,
     "Random Forest": rf_model,
-    # "Logistic Regression": lr_model
+    "Logistic Regression": lr_model
 }
-
 
 @csrf_exempt
 def predict_damage(request):
     if request.method == "POST":
         data = JSONParser().parse(request)
+       
 
         # Kategorik değişkenleri sayısal hale getirme
         try:
@@ -83,9 +81,33 @@ def predict_damage(request):
             predictions = {}
             for model_name, model in models.items():
                 pred = model.predict(input_data)[0] + 1  # 1 tabanlı damage grade
+                print(pred)
                 predictions[model_name + "_damage_grade"] = int(pred)
+                if data["save"]=="true":
+                    # Gelen veriyi veritabanına kaydet
+                    building = Building.objects.create(
+                        building_floor_count=data["building_floor_count"],
+                        building_height=data["building_height"],
+                        building_age=data["building_age"],
+                        building_plinth_area=data["building_plinth_area"],
+                        earthquake_magnitude=data["earthquake_magnitude"],
+                        foundation_type=data["foundation_type"],
+                        roof_type=data["roof_type"],
+                        land_surface_condition=data["land_surface_condition"],
+                        ground_floor_type=data["ground_floor_type"],
+                        date_added=now()  # Otomatik tarih ekleme
+                    )
 
-            return JsonResponse(predictions)
+                    return JsonResponse({
+                        "message": "Prediction successful, data saved!",
+                        "predictions": predictions,
+                        "building_id": BuildingSerializer(building).data
+                    })
+                
+            return JsonResponse({
+                "message": "Prediction successful, data not saved!",
+                "predictions": predictions,
+            })
 
         except KeyError as e:
             return JsonResponse({"error": f"Invalid category: {str(e)}"}, status=400)

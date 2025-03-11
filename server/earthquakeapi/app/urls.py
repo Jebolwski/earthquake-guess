@@ -1,5 +1,4 @@
 from django.urls import path
-from .views import predict_damage
 from . import views
 
 urlpatterns = [
