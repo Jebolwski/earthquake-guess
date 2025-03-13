@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Building
-
+from django.contrib.auth.models import User
 class BuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Building
@@ -17,3 +17,9 @@ class BuildingSerializer(serializers.ModelSerializer):
             "ground_floor_type",
             "date_added"
         ]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model=User
+        fields=['id','username','password','email']

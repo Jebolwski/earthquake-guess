@@ -1,9 +1,17 @@
+import { BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { useState } from "react";
+import AnimatedRoutes from "./components/AnimatedRoutes";
+import { AuthProvider } from "./context/AuthContext";
+
 function App() {
   return (
-    <>
-      <p>app.jsx</p>
-      <p className="text-red-500">messi</p>
-    </>
+    <Router>
+      <Navbar />
+      <AuthProvider>
+        <AnimatedRoutes />
+      </AuthProvider>
+    </Router>
   );
 }
 
