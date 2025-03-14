@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 
 const Login = () => {
@@ -6,8 +6,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const { login }: any = useContext(AuthContext);
-
-  console.log(login);
 
   return (
     <div>

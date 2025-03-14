@@ -1,38 +1,62 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 const AuthContext = createContext({});
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 export default AuthContext;
 
 export const AuthProvider = ({ children }: any) => {
-  const [profile, setProfile] = useState();
-  const [googleDataState, setGoogleDataState] = useState();
-  const [key, setKey] = useState<string>();
-
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  const login = (body: { username: string; password: string }) => {
-    const requestOptions: any = {
+  const login = async (body: { username: string; password: string }) => {
+    let response = await fetch("http://127.0.0.1:8000/api/login", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       method: "POST",
-      headers: myHeaders,
-      body: body,
-      redirect: "follow",
-    };
+      body: JSON.stringify(body),
+    });
+    let data = await response.json();
 
-    fetch("http://127.0.0.1:8000/api/login", requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      console.log(data.user);
+
+      navigate("/");
+    } else {
+      console.error("Login failed:", data);
+    }
+  };
+
+  const register = async (body: { username: string; password: string }) => {
+    let response = await fetch("http://127.0.0.1:8000/api/signup", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    let data = await response.json();
+
+    if (response.ok) {
+      navigate("/login");
+    } else {
+      console.error("Login failed:", data);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   let contextData = {
-    profile: profile,
     login: login,
+    logout: logout,
+    register: register,
   };
 
   return (

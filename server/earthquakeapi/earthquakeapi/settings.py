@@ -25,7 +25,16 @@ SECRET_KEY = 'django-insecure-i0iq9u#^aferc)e1q8klo)m1q#rpt_%7gg@nlr$d4lu)r0p$xd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Geliştirme sürecinde tüm origin'leri kabul eder (Güvenlik açısından prod'da kapatılmalı)
+# veya sadece belirli origin'leri açın:
+# CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+
 
 
 # Application definition
@@ -38,11 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'app',  
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # En üste ekleyin
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'earthquakeapi.urls'
 

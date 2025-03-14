@@ -7,8 +7,8 @@ import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
     <Router>
-      <Navbar />
       <AuthProvider>
+        <Navbar />
         <AnimatedRoutes />
       </AuthProvider>
     </Router>
