@@ -8,41 +8,103 @@ const Register = () => {
   const { register }: any = useContext(AuthContext);
 
   return (
-    <div className="bg-amber-50 font-opensans h-full flex justify-center items-center p-4">
-      <div className="flex items-center bg-amber-100  border border-amber-200 shadow-md rounded-lg w-fit">
-        <div className="p-3">
-          <p className="text-lg">
-            <label className="text-xl font-semibold">Register</label> to see
-            your building
-          </p>
-          <div className="mt-4">
-            <p className="text-sm">Username</p>
-            <input
-              type="text"
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-              className="focus:outline-0 focus:shadow-lg w-full shadow-md duration-200 px-2 py-1 rounded-md bg-white border border-amber-300"
+    <div className="bg-[#686279] font-opensans h-full flex justify-center items-center p-4">
+      <div className="flex items-center bg-[#2c2638] border border-[#262031] text-white shadow-md hover:shadow-lg duration-200 rounded-lg w-fit">
+        <div className="flex">
+          <div className="rounded-lg p-4">
+            <img
+              src="https://wallpapersok.com/images/hd/dark-purple-city-view-8v7bayl3lciusuos.jpg"
+              className="rounded-lg w-96 h-full object-cover"
             />
           </div>
-          <div className="mt-4">
-            <p className="text-sm mt-2">Password</p>
-            <input
-              type="text"
-              onChange={(e) => {
-                setUsername(e.target.value);
+          <div className="p-8 px-10">
+            <p className="text-3xl">Create an account</p>
+            <div className="my-4">
+              <div className="flex text-sm gap-2">
+                <p className="text-gray-300">Already have an account?</p>
+                <p className="text-[#968cb6] underline">Login</p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="flex gap-4">
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
+                  placeholder="First name"
+                  className="focus:outline-0 bg-[#3c364c] focus:shadow-lg w-full shadow-md duration-200 px-3 py-2 focus:border-[#676282] text-sm text-gray-100 rounded-md border-2 border-[#332d41]"
+                />
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
+                  placeholder="Last name"
+                  className="focus:outline-0 bg-[#3c364c] focus:shadow-lg w-full shadow-md duration-200 px-3 py-2 focus:border-[#676282] text-sm text-gray-100 rounded-md border-2 border-[#332d41]"
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <input
+                type="text"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                placeholder="Email"
+                className="focus:outline-0 bg-[#3c364c] focus:shadow-lg w-full shadow-md duration-200 px-3 py-2 focus:border-[#676282] text-sm text-gray-100 rounded-md border-2 border-[#332d41]"
+              />
+            </div>
+            <div className="mt-4">
+              <input
+                type="text"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+                placeholder="Enter your password"
+                className="focus:outline-0 bg-[#3c364c] focus:shadow-lg w-full shadow-md duration-200 px-3 py-2 focus:border-[#676282] text-sm text-gray-100 rounded-md border-2 border-[#332d41]"
+              />
+            </div>
+            <button
+              className="bg-[#6d54b5] mt-4 cursor-pointer text-white hover:shadow-lg shadow-md duration-200 px-4 rounded-md border border-[#614b9f] py-2 px-2 mt-2 w-full"
+              onClick={() => {
+                register({ username, password });
               }}
-              className="focus:outline-0 focus:shadow-lg w-full shadow-md duration-200 px-2 py-1 rounded-md bg-white border border-amber-300"
-            />
+            >
+              Create Account
+            </button>
+            <div className="flex items-center gap-3 mt-4">
+              <div className="h-[2px] w-full bg-[#454150]"></div>
+              <p className="text-[#706b7c] text-sm w-fit text-nowrap">
+                Or register with
+              </p>
+              <div className="h-[2px] w-full bg-[#454150]"></div>
+            </div>
+            <div className="mt-4">
+              <div className="flex gap-3">
+                <button className="bg-[#2c2638] w-full p-2 border-[1px] border-[#656072] rounded-lg">
+                  <div className="flex items-center justify-center gap-3">
+                    <img
+                      src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/google_logo-google_icongoogle-512.png"
+                      alt="Google icon"
+                      className="w-7"
+                    />
+                    <p>Google</p>
+                  </div>
+                </button>
+                <button className="bg-[#2c2638] w-full p-2 border-[1px] border-[#656072] rounded-lg">
+                  <div className="flex items-center justify-center gap-3">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/1724px-Apple_logo_white.svg.png"
+                      alt="Google icon"
+                      className="w-6"
+                    />
+                    <p>Apple</p>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            className="bg-yellow-500 mt-4 cursor-pointer text-white hover:shadow-lg shadow-md duration-200 px-4 rounded-md border border-amber-300 font-semibold py-1 px-2 mt-2"
-            onClick={() => {
-              register({ username, password });
-            }}
-          >
-            Register
-          </button>
         </div>
       </div>
     </div>

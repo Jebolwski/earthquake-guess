@@ -11,7 +11,7 @@ const Navbar = () => {
   }, [localStorage.getItem("user")]);
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 h-16">
       <Link to={"/"}>Home</Link>
       {user == null ? (
         <>

@@ -21,7 +21,11 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 xg_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\xgboost.pkl"
 dt_model_path = r"C:\Users\mertg\OneDrive\Masaüstü\Dosya\Programming\data-eng\earthquake\earthquake-guess\server\earthquakeapi\app\models\decision_tree.pkl"
@@ -66,6 +70,7 @@ models = {
     "Random Forest": rf_model,
     "Logistic Regression": lr_model
 }
+
 
 @csrf_exempt
 def predict_damage(request):

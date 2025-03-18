@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 
 server/earthquakeapi/db.sqlite3
-server/earthquakeapi/earthquakeapi/__pycache__
+server/earthquakeapi/core/__pycache__
 server/earthquakeapi/app/__pycache__
+server/earthquakeapi/authentication/__pycache__
+server/earthquakeapi/authentication/migrations
 server/earthquakeapi/app/migrations
