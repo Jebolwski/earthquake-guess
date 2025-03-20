@@ -23,9 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
-server/earthquakeapi/db.sqlite3
-server/earthquakeapi/core/__pycache__
-server/earthquakeapi/app/__pycache__
-server/earthquakeapi/authentication/__pycache__
-server/earthquakeapi/authentication/migrations
-server/earthquakeapi/app/migrations
+backend/.idea
+backend/api/__pycache__
+backend/backend/__pycache__
+backend/db.sqlite3
+backend/requirements.txt
+backend/earthquakeapi/app/migrations
+
+social-auth/node_modules
