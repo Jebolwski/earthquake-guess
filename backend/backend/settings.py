@@ -7,7 +7,7 @@ import datetime
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-3ob_osy(_t%**hv&p#pkgq)jdcg+avmj*6f5r!fkf--#)5+l3k'
+SECRET_KEY = ''
 
 DEBUG = True
 
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
-            "client_id": "796799461942-os8v3rqcun15nbre1icr48qleieoklk2.apps.googleusercontent.com",
-            "secret": "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",
+            "client_id": "",
+            "secret": "",
         },
     },
 }
@@ -157,4 +157,4 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "besevler.mah.muh@gmail.com"
-EMAIL_HOST_PASSWORD = 'yeewkfrckfphikfa'
+EMAIL_HOST_PASSWORD = ''
