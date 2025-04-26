@@ -30,4 +30,4 @@ backend/db.sqlite3
 backend/requirements.txt
 backend/earthquakeapi/app/migrations
 
-social-auth/node_modules
+frontend/node_modules

@@ -1,0 +1,117 @@
+import { createContext, useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
+import axios from "axios"; // API istekleri için
+import { useNavigate } from "react-router-dom";
+
+const AuthContext = createContext({});
+
+export default AuthContext;
+
+export const AuthProvider = ({ children }) => {
+  axios.defaults.baseURL = "http://localhost:8000";
+
+  const [user, setUser] = useState(() =>
+    localStorage.getItem("authTokens")
+      ? jwt_decode(JSON.parse(localStorage.getItem("authTokens")).access)
+      : null
+  );
+  const [authTokens, setAuthTokens] = useState(() =>
+    localStorage.getItem("authTokens")
+      ? JSON.parse(localStorage.getItem("authTokens"))
+      : null
+  );
+  const navigate = useNavigate();
+
+  // Kullanıcı login olunca çağrılacak
+  const loginUser = async (identifier, password) => {
+    try {
+      const response = await axios.post("/api/auth/login/", {
+        username: identifier, // veya email
+        password,
+      });
+      if (response.status === 200) {
+        const token = response.data.key;
+        localStorage.setItem("authTokens", JSON.stringify({ access: token })); // Token'ı localStorage'a kaydediyoruz
+        setAuthTokens({ access: token }); // authTokens state'ine kaydediyoruz
+        await getUserByToken(token); // Token ile kullanıcı bilgilerini alıp setUser ile kaydediyoruz
+        navigate("/"); // Giriş başarılıysa home'a yönlendir
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Giriş başarısız! Kullanıcı adı/email veya şifre yanlış olabilir.");
+    }
+  };
+
+  const getUserByToken = async (token) => {
+    try {
+      const response = await axios.post("/api/get-user-by-token/", { token });
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  // Kullanıcı register olunca çağrılacak
+  const registerUser = async (username, email, password, password2) => {
+    try {
+      const response = await axios.post("/api/register/", {
+        username,
+        email,
+        password,
+        password2,
+      });
+      if (response.status === 201) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Register error:", error);
+      alert("Kayıt başarısız oldu!");
+    }
+  };
+
+  // Google login olduğunda çağrılacak
+  const googleLogin = async (credential) => {
+    try {
+      const response = await axios.post("/api/rest-auth/google/", {
+        access_token: credential,
+      });
+      if (response.status === 200) {
+        setAuthTokens(response.data);
+        setUser(jwt_decode(response.data.access));
+        localStorage.setItem("authTokens", JSON.stringify(response.data));
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("Google ile giriş yapılamadı!");
+    }
+  };
+
+  // Kullanıcı logout olunca
+  const logoutUser = () => {
+    setAuthTokens(null);
+    setUser(null);
+    localStorage.removeItem("authTokens");
+    navigate("/login");
+  };
+
+  // Eğer localStorage'da token varsa, token ile kullanıcıyı yükle
+  useEffect(() => {
+    if (authTokens) {
+      getUserByToken(authTokens.access); // Token ile kullanıcıyı getir
+    }
+  }, [authTokens]);
+
+  let contextData = {
+    user,
+    authTokens,
+    loginUser,
+    registerUser,
+    googleLogin,
+    logoutUser,
+  };
+
+  return (
+    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
+  );
+};

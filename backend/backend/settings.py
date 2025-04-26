@@ -1,13 +1,10 @@
-from datetime import timedelta
 from pathlib import Path
 import os
-from . import settings
-import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-3ob_osy(_t%**hv&p#pkgq)jdcg+avmj*6f5r!fkf--#)5+l3k'
 
 DEBUG = True
 
@@ -38,8 +35,8 @@ INSTALLED_APPS = [
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
-            "client_id": "",
-            "secret": "",
+            "client_id": os.getenv("CLIENT_ID"),
+            "secret": os.getenv("SECRET"),
         },
     },
 }
@@ -47,7 +44,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-SITE_ID = 2
+SITE_ID = 3
 
 # REST_USE_JWT = True
 
@@ -63,6 +60,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'api.authentication.UsernameOrEmailBackend',   # bizim özel backend
+    'django.contrib.auth.backends.ModelBackend',   # Django'nun default'u
+]
 
 
 REST_FRAMEWORK = {
@@ -157,4 +158,4 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = "587"
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "besevler.mah.muh@gmail.com"
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'yeewkfrckfphikfa'
