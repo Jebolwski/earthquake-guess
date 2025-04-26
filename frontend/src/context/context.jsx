@@ -10,11 +10,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
   axios.defaults.baseURL = "http://localhost:8000";
 
-  const [user, setUser] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? jwt_decode(JSON.parse(localStorage.getItem("authTokens")).access)
-      : null
-  );
+  const [user, setUser] = useState(null);
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens"))
@@ -95,10 +91,9 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  // Eğer localStorage'da token varsa, token ile kullanıcıyı yükle
   useEffect(() => {
     if (authTokens) {
-      getUserByToken(authTokens.access); // Token ile kullanıcıyı getir
+      getUserByToken(authTokens.access);
     }
   }, [authTokens]);
 

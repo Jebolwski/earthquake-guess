@@ -1,3 +1,3 @@
 /// <reference types="vite/client" />
 CLIENT_ID =
-  796799461942 - os8v3rqcun15nbre1icr48qleieoklk2.apps.googleusercontent.com;
+  901842736411 - j7k03cpbq46egk12ae99a7598tl3b4ie.apps.googleusercontent.com;

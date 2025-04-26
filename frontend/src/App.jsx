@@ -15,7 +15,7 @@ import "swiper/css/scrollbar";
 function App() {
   return (
     <div className="font-sans">
-      <GoogleOAuthProvider clientId="901842736411-j7k03cpbq46egk12ae99a7598tl3b4ie.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <Router>
           <AuthProvider>
             <ToastContainer
