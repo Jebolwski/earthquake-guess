@@ -7,13 +7,14 @@ urlpatterns = [
     path('get-all-sites/', views.GetAllSites),
 
     # Auth
-    path('register/', views.Register),
+    path('auth/register/', views.Register),
     path('get-user-by-token/', views.get_user_by_token),
     path('rest-auth/google/', views.GoogleLogin.as_view()),
     path('auth/', include('dj_rest_auth.urls')),  # login, logout, password reset
+    path('logout/', views.logout_view, name='logout'),
 
     # Password Reset
-    path('user/password/reset/', PasswordResetView.as_view(), name='rest_password_reset'),
-    path('user/password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('user/password/reset/', views.custom_password_reset, name='custom_password_reset'),
+    path('user/password/reset/confirm/<uidb64>/<token>/', views.custom_password_reset_confirm, name='custom_password_reset_confirm'),
 ]
 

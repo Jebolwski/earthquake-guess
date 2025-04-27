@@ -4,6 +4,8 @@ import { AuthProvider } from "./context/context";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
+import PasswordResetRequest from "./pages/PasswordResetRequest/PasswordResetRequest";
+import ResetPasswordConfirm from "./pages/PasswordResetConfirm/PasswordResetConfirm";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,6 +44,14 @@ function App() {
               <Route
                 path="/"
                 element={<Home />}
+              />
+              <Route
+                path="/password-reset"
+                element={<PasswordResetRequest />}
+              />
+              <Route
+                path="/reset-password/confirm/:uid/:token"
+                element={<ResetPasswordConfirm />}
               />
             </Routes>
           </AuthProvider>

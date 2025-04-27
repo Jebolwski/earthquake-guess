@@ -1,10 +1,16 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
+load_dotenv()  # .env dosyasını oku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = 'django-insecure-3ob_osy(_t%**hv&p#pkgq)jdcg+avmj*6f5r!fkf--#)5+l3k'
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',  # Geliştirme ortamında frontend URL'si
+]
 
 DEBUG = True
 
@@ -152,10 +158,12 @@ MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'  # veya productiondaysa 'https'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = "587"
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "besevler.mah.muh@gmail.com"
-EMAIL_HOST_PASSWORD = 'yeewkfrckfphikfa'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == "True"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

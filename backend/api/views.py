@@ -11,6 +11,21 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from rest_framework.authtoken.models import Token
+from rest_framework import status
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import update_session_auth_hash
 
 load_dotenv()
 
@@ -106,6 +121,95 @@ def Register(request):
 def GetAllSites(request):
     sites = Site.objects.all().values("id", "domain", "name")
     return Response({"sites": list(sites)})
+
+@api_view(['POST'])
+def logout_view(request):
+    token_key = request.data.get('token')
+
+    if not token_key:
+        return Response({"error": "Token not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        token = Token.objects.get(key=token_key)
+        token.delete()
+        return Response({"success": "Token deleted successfully."}, status=status.HTTP_200_OK)
+    except Token.DoesNotExist:
+        return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['POST'])
+def custom_password_reset(request):
+    # POST isteği ile gelen veriyi alalım (email)
+    if request.method == "POST":
+        email = request.data.get('email')  # Kullanıcının email adresi
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User with that email not found."}, status=404)
+
+        # Kullanıcı bulunursa, reset token ve uid oluşturuyoruz
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(str(user.pk).encode('utf-8'))
+
+        # Reset linkini frontend'e uygun formatta hazırlıyoruz
+        reset_link = f"{settings.FRONTEND_URL}/reset-password/confirm/{uid}/{token}/"
+
+        # E-posta içeriğini doğrudan string olarak yazıyoruz
+        subject = "Password Reset Request"
+        message = f"""
+        Hello {user.username},
+
+        You're receiving this email because you or someone else has requested a password reset for your account.
+
+        To reset your password, click the link below:
+        {reset_link}
+
+        If you didn't request a password reset, you can safely ignore this email.
+
+        Thank you for using our service!
+        """
+
+        # E-posta gönderme
+        send_mail(subject, message, 'no-reply@localhost', [email])
+
+        return JsonResponse({"message": "Password reset email sent!"}, status=200)
+    
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
+@csrf_exempt
+@api_view(['POST'])
+def custom_password_reset_confirm(request, uidb64, token):
+    # Body'den uid ve token alıyoruz
+    new_password1 = request.data.get('new_password1')
+    new_password2 = request.data.get('new_password2')
+
+    if not new_password1 or not new_password2:
+        raise ValidationError("Yeni şifreler boş olamaz.")
+
+    if new_password1 != new_password2:
+        raise ValidationError("Şifreler eşleşmiyor.")
+
+    # Token ve UID'yi doğrulamak için işlem yapalım
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode('utf-8')
+        user = get_user_model().objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        raise ValidationError("Geçersiz link veya kullanıcı.")
+
+    if not default_token_generator.check_token(user, token):
+        raise ValidationError("Geçersiz token.")
+
+    # Yeni şifreyi ayarlıyoruz
+    form = SetPasswordForm(user, request.data)
+    if form.is_valid():
+        form.save()
+
+        # Kullanıcının oturumunu güncelliyoruz
+        update_session_auth_hash(request, user)
+
+        return Response({"message": "Şifreniz başarıyla sıfırlandı."}, status=status.HTTP_200_OK)
+    else:
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter

@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   // Kullanıcı register olunca çağrılacak
   const registerUser = async (username, email, password, password2) => {
     try {
-      const response = await axios.post("/api/register/", {
+      const response = await axios.post("/api/auth/register/", {
         username,
         email,
         password,
@@ -84,7 +84,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Kullanıcı logout olunca
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    if (authTokens) {
+      try {
+        await axios.post("/api/logout/", {
+          token: authTokens.access,
+        });
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    }
+
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
