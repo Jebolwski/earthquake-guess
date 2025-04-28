@@ -33,3 +33,4 @@ backend/requirements.txt
 backend/earthquakeapi/app/migrations
 
 frontend/node_modules
+frontend/.env

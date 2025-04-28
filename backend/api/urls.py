@@ -9,7 +9,7 @@ urlpatterns = [
     # Auth
     path('auth/register/', views.Register),
     path('get-user-by-token/', views.get_user_by_token),
-    path('rest-auth/google/', views.GoogleLogin.as_view()),
+    path('rest-auth/google/', views.google_login),
     path('auth/', include('dj_rest_auth.urls')),  # login, logout, password reset
     path('logout/', views.logout_view, name='logout'),
 

@@ -23,9 +23,28 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth import update_session_auth_hash
+from allauth.socialaccount.models import SocialAccount, SocialLogin
+from django.contrib.auth import get_user_model
+from django.core.exceptions import MultipleObjectsReturned
+from rest_framework.views import APIView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.models import SocialLogin
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from allauth.socialaccount.helpers import complete_social_login
+from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.auth import get_user_model
+import jwt
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.models import SocialLogin
 
 load_dotenv()
 
@@ -211,8 +230,50 @@ def custom_password_reset_confirm(request, uidb64, token):
     else:
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
-    callback_url = "http://localhost:5173/"  # ana sayfa
-    client_class = OAuth2Client
+import jwt
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
 
+@csrf_exempt
+@api_view(['POST'])
+def google_login(request):
+    # Frontend'den JWT token'ı al
+    print(request,"bomboclat")
+    google_token = request.data.get('token')
+    if not google_token:
+        return Response({'error': 'No token provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Google'dan gelen token'ı decode ediyoruz (signature doğrulaması olmadan)
+        decoded_data = jwt.decode(google_token, options={"verify_signature": False})
+    except jwt.DecodeError:
+        return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # decoded_data içinden bilgileri çekiyoruz
+    email = decoded_data.get('email')
+    first_name = decoded_data.get('given_name')
+    last_name = decoded_data.get('family_name')
+    username = email.split('@')[0]  # email'in '@' öncesini username yapıyoruz
+
+    if not email:
+        return Response({'error': 'Email not found in token'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Kullanıcı daha önce kaydolmuş mu diye kontrol ediyoruz
+    user, created = User.objects.get_or_create(email=email, defaults={
+        'username': username,
+        'first_name': first_name,
+        'last_name': last_name,
+    })
+
+    # Eğer kullanıcı yeni değilse username farklı olabilir, yine email üzerinden devam ediyoruz
+
+    # Kullanıcıya token üretiyoruz (varsa alıyoruz)
+    token, _ = Token.objects.get_or_create(user=user)
+
+    return Response({
+        'message': 'Login successful',
+        'token': token.key,
+        'user': user.username,
+    }, status=status.HTTP_200_OK)

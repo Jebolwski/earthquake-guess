@@ -1,17 +1,43 @@
 import React, { useState, useContext } from "react";
 import AuthContext from "../../context/context";
-import { Eye, EyeOff } from "lucide-react"; // lucide-react paketinden ikonlar
+import { Eye, EyeOff } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const Login = () => {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, socialLoginUser } = useContext(AuthContext);
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Şifre görünür mü?
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     loginUser(identifier, password);
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    const accessToken = credentialResponse.credential;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/rest-auth/google/",
+        {
+          token: accessToken,
+        }
+      );
+
+      console.log(response.data);
+
+      // şimdi navigate'i de gönderiyoruz
+      socialLoginUser(response.data.token);
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    console.error("Google login failed");
   };
 
   return (
@@ -54,6 +80,11 @@ const Login = () => {
         >
           Giriş Yap
         </button>
+
+        <GoogleLogin
+          onSuccess={handleGoogleLoginSuccess}
+          onError={handleGoogleLoginError}
+        />
       </form>
     </div>
   );

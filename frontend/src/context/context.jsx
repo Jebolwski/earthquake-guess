@@ -101,6 +101,19 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
+  const socialLoginUser = async (token) => {
+    try {
+      localStorage.setItem("authTokens", JSON.stringify({ access: token }));
+      setAuthTokens({ access: token });
+      // Token'ı kaydettikten sonra user'ı çekiyoruz
+      await getUserByToken(token);
+
+      // Sonra anasayfaya yönlendiriyoruz
+      navigate("/");
+    } catch (error) {
+      console.error("Login sırasında hata oluştu:", error);
+    }
+  };
   useEffect(() => {
     if (authTokens) {
       getUserByToken(authTokens.access);
@@ -114,6 +127,7 @@ export const AuthProvider = ({ children }) => {
     registerUser,
     googleLogin,
     logoutUser,
+    socialLoginUser,
   };
 
   return (
