@@ -45,6 +45,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.models import SocialLogin
+from rest_framework.permissions import IsAuthenticated
+
 
 load_dotenv()
 
@@ -65,7 +67,6 @@ def Routes(request):
     ]
 
     return Response(routes)
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -240,7 +241,6 @@ from django.contrib.auth.models import User
 @api_view(['POST'])
 def google_login(request):
     # Frontend'den JWT token'ı al
-    print(request,"bomboclat")
     google_token = request.data.get('token')
     if not google_token:
         return Response({'error': 'No token provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -277,3 +277,92 @@ def google_login(request):
         'token': token.key,
         'user': user.username,
     }, status=status.HTTP_200_OK)
+
+
+import os
+import pickle   
+import numpy as np
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import pickle
+import os
+
+@api_view(['POST'])
+def predict_damage(request):
+    land_surface_condition_mapping = {
+        'Flat': 0,
+        'Moderate slope': 1,
+        'Steep slope': 2
+    }
+    
+    roof_type_mapping = {
+        'Bamboo/Timber-Light roof': 0,
+        'Bamboo/Timber-Heavy roof': 1,
+        'RCC/RB/RBC': 2
+    }
+    
+    foundation_type_mapping = {
+        'Mud mortar-Stone/Brick': 0,
+        'Bamboo/Timber': 1,
+        'Cement-Stone/Brick': 2,
+        'RC': 3
+    }
+    
+    ground_floor_type_mapping = {
+        'Mud': 0,
+        'RC': 1,
+        'Brick/Stone': 2,
+        'Timber': 3
+    }
+
+    try:
+        data = request.data
+        print("1")
+        # Veriyi al
+        input_data = [
+            float(data['plinth_area_sq_ft']),
+            float(data['magnitude']),
+            land_surface_condition_mapping[data['land_surface_condition']],  # mapping kullan!
+            int(data['count_floors_pre_eq']),
+            float(data['height_ft_pre_eq']),
+            roof_type_mapping[data['roof_type']],                           # mapping kullan!
+            int(data['age_building']),
+            foundation_type_mapping[data['foundation_type']],               # mapping kullan!
+            ground_floor_type_mapping[data['ground_floor_type']]             # mapping kullan!
+        ]
+
+        print("2222")
+
+        input_array = np.array(input_data).reshape(1, -1)
+
+        print("2")
+        # Modellerin dosyalarını oku
+        models_dir = os.path.join(os.path.dirname(__file__), 'models')  # Modeller burada olsun
+        model_files = [
+            "RandomForest_model_9features.sav",
+            "GradientBoosting_model_9features.sav",
+            "DecisionTree_model_9features.sav",
+            "KNeighbors_model_9features.sav",
+            "LinearRegression_model_9features.sav",
+            "MLPRegressor_model_9features.sav",
+            "AdaBoost_model_9features.sav"
+        ]
+        print("3")
+
+        predictions = {}
+
+        for model_file in model_files:
+            print("4")
+            model_path = os.path.join(models_dir, model_file)
+            with open(model_path, 'rb') as f:
+                model = pickle.load(f)
+            print("5")
+            prediction = model.predict(input_array)[0]
+            predictions[model_file.replace("_model_9features.sav", "")] = prediction
+
+        return Response(predictions, status=200)
+
+    except Exception as e:
+        print("6")
+        return Response({'error': str(e)}, status=400)

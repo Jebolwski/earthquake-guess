@@ -13,6 +13,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import PredictDamage from "./pages/PredictDamage/PredictDamage";
 
 function App() {
   return (
@@ -43,11 +45,19 @@ function App() {
               />
               <Route
                 path="/"
-                element={<Home />}
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="/password-reset"
                 element={<PasswordResetRequest />}
+              />
+              <Route
+                path="/predict-damage"
+                element={<PredictDamage />}
               />
               <Route
                 path="/reset-password/confirm/:uid/:token"
