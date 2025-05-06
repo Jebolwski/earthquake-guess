@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import BuildingVisualization from "../../components/BuildingVisualization/BuildingVisualization";
 
 const PredictDamage = () => {
   const [formData, setFormData] = useState({
@@ -15,16 +16,21 @@ const PredictDamage = () => {
   });
 
   const [predictions, setPredictions] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showDamage, setShowDamage] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setShowDamage(false); // Hide damage when form changes
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setShowDamage(false);
 
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
@@ -42,147 +48,308 @@ const PredictDamage = () => {
       );
 
       setPredictions(response.data);
+      setShowDamage(true); // Show damage after prediction
     } catch (error) {
       console.error(error);
+      alert("Tahmin yapılırken bir hata oluştu");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const calculateAverage = () => {
+    if (!predictions) return 0;
+
+    const values = Object.values(predictions).map(Number);
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    const average = sum / values.length;
+
+    return average.toFixed(6);
+  };
+
+  const getDamageLevel = () => {
+    if (!showDamage) return "none";
+    const avg = parseFloat(calculateAverage());
+    if (avg >= 2.5) return "heavy";
+    if (avg >= 1.5) return "medium";
+    if (avg >= 1) return "light";
+    return "none";
+  };
+
+  const getDamageDescription = () => {
+    switch (getDamageLevel()) {
+      case "heavy":
+        return "Ağır Hasar - Bina Yıkıldı";
+      case "medium":
+        return "Orta Hasar - Önemli Çatlaklar";
+      case "light":
+        return "Hafif Hasar - Küçük Çatlaklar";
+      default:
+        return "Bina Durumu: Sağlam";
+    }
+  };
+
+  const getDamageColor = () => {
+    switch (getDamageLevel()) {
+      case "heavy":
+        return "text-red-600";
+      case "medium":
+        return "text-orange-500";
+      case "light":
+        return "text-yellow-600";
+      default:
+        return "text-green-600";
     }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Bina Hasar Tahmini</h2>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Bina Hasar Tahmini Sistemi
+      </h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-      >
-        <input
-          type="number"
-          name="plinth_area_sq_ft"
-          placeholder="Plinth Area (sq ft)"
-          value={formData.plinth_area_sq_ft}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        />
-        <input
-          type="number"
-          step="0.1"
-          name="magnitude"
-          placeholder="Deprem Şiddeti (Magnitude)"
-          value={formData.magnitude}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        />
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Form Section */}
+        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">
+            Bina Bilgilerini Girin
+          </h2>
 
-        <select
-          name="land_surface_condition"
-          value={formData.land_surface_condition}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        >
-          <option value="">Zemin Eğimi Seç</option>
-          <option value="Flat">Flat</option>
-          <option value="Moderate slope">Moderate slope</option>
-          <option value="Steep slope">Steep slope</option>
-        </select>
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <div className="form-group">
+              <label className="block mb-1 font-medium">
+                Plinth Area (sq ft)
+              </label>
+              <input
+                type="number"
+                name="plinth_area_sq_ft"
+                value={formData.plinth_area_sq_ft}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+                min="100"
+              />
+            </div>
 
-        <input
-          type="number"
-          name="count_floors_pre_eq"
-          placeholder="Kat Sayısı"
-          value={formData.count_floors_pre_eq}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        />
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Deprem Şiddeti</label>
+              <input
+                type="number"
+                step="0.1"
+                name="magnitude"
+                value={formData.magnitude}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+                min="0.1"
+              />
+            </div>
 
-        <input
-          type="number"
-          name="height_ft_pre_eq"
-          placeholder="Bina Yüksekliği (ft)"
-          value={formData.height_ft_pre_eq}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        />
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Zemin Eğimi</label>
+              <select
+                name="land_surface_condition"
+                value={formData.land_surface_condition}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="Flat">Düz</option>
+                <option value="Moderate slope">Orta Eğimli</option>
+                <option value="Steep slope">Dik Eğimli</option>
+              </select>
+            </div>
 
-        <select
-          name="roof_type"
-          value={formData.roof_type}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        >
-          <option value="">Çatı Türü Seç</option>
-          <option value="Bamboo/Timber-Light roof">
-            Bamboo/Timber-Light roof
-          </option>
-          <option value="Bamboo/Timber-Heavy roof">
-            Bamboo/Timber-Heavy roof
-          </option>
-          <option value="RCC/RB/RBC">RCC/RB/RBC</option>
-        </select>
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Kat Sayısı</label>
+              <input
+                type="number"
+                name="count_floors_pre_eq"
+                value={formData.count_floors_pre_eq}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+                min="1"
+                max="10"
+              />
+            </div>
 
-        <input
-          type="number"
-          name="age_building"
-          placeholder="Bina Yaşı"
-          value={formData.age_building}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        />
+            <div className="form-group">
+              <label className="block mb-1 font-medium">
+                Bina Yüksekliği (ft)
+              </label>
+              <input
+                type="number"
+                name="height_ft_pre_eq"
+                value={formData.height_ft_pre_eq}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+                min="10"
+                max="100"
+              />
+            </div>
 
-        <select
-          name="foundation_type"
-          value={formData.foundation_type}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        >
-          <option value="">Temel Türü Seç</option>
-          <option value="Mud mortar-Stone/Brick">Mud mortar-Stone/Brick</option>
-          <option value="Bamboo/Timber">Bamboo/Timber</option>
-          <option value="Cement-Stone/Brick">Cement-Stone/Brick</option>
-          <option value="RC">RC</option>
-        </select>
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Çatı Türü</label>
+              <select
+                name="roof_type"
+                value={formData.roof_type}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="Bamboo/Timber-Light roof">
+                  Bamboo/Timber-Hafif
+                </option>
+                <option value="Bamboo/Timber-Heavy roof">
+                  Bamboo/Timber-Ağır
+                </option>
+                <option value="RCC/RB/RBC">RCC/RB/RBC</option>
+              </select>
+            </div>
 
-        <select
-          name="ground_floor_type"
-          value={formData.ground_floor_type}
-          onChange={handleChange}
-          className="p-2 border rounded"
-          required
-        >
-          <option value="">Zemin Kat Türü Seç</option>
-          <option value="Mud">Mud</option>
-          <option value="RC">RC</option>
-          <option value="Brick/Stone">Brick/Stone</option>
-          <option value="Timber">Timber</option>
-        </select>
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Bina Yaşı</label>
+              <input
+                type="number"
+                name="age_building"
+                value={formData.age_building}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+                min="1"
+                max="100"
+              />
+            </div>
 
-        <button
-          type="submit"
-          className="col-span-1 md:col-span-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Tahmin Et
-        </button>
-      </form>
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Temel Türü</label>
+              <select
+                name="foundation_type"
+                value={formData.foundation_type}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="Mud mortar-Stone/Brick">
+                  Çamur Harç-Taş/Tuğla
+                </option>
+                <option value="Bamboo/Timber">Bambu/Ahşap</option>
+                <option value="Cement-Stone/Brick">Çimento-Taş/Tuğla</option>
+                <option value="RC">Betonarme</option>
+              </select>
+            </div>
 
-      {predictions && (
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-2">Modellerin Tahminleri:</h3>
-          <ul className="list-disc list-inside">
-            {Object.entries(predictions).map(([model, prediction]) => (
-              <li key={model}>
-                <strong>{model}:</strong> {prediction}
-              </li>
-            ))}
-          </ul>
+            <div className="form-group">
+              <label className="block mb-1 font-medium">Zemin Kat Türü</label>
+              <select
+                name="ground_floor_type"
+                value={formData.ground_floor_type}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="Mud">Çamur</option>
+                <option value="RC">Betonarme</option>
+                <option value="Brick/Stone">Tuğla/Taş</option>
+                <option value="Timber">Ahşap</option>
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-2 px-4 rounded text-white font-medium ${
+                  isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et"}
+              </button>
+            </div>
+          </form>
+
+          {predictions && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-xl font-semibold mb-3">
+                Modellerin Tahminleri:
+              </h3>
+              <div className="grid-cols-1 md:grid-cols-2 gap-2">
+                {Object.entries(predictions).map(([model, prediction]) => (
+                  <div
+                    key={model}
+                    className="flex justify-between"
+                  >
+                    <span className="font-medium">{model}:</span>
+                    <span>{prediction.toFixed(3)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Visualization Section */}
+        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+          <BuildingVisualization
+            floors={parseInt(formData.count_floors_pre_eq) || 3}
+            height={parseInt(formData.height_ft_pre_eq) || 30}
+            age={parseInt(formData.age_building) || 15}
+            plinth={parseInt(formData.plinth_area_sq_ft) || 1000}
+            slope={formData.land_surface_condition || "Flat"}
+            foundationType={
+              formData.foundation_type || "Mud mortar-Stone/Brick"
+            }
+            groundFloor={formData.ground_floor_type || "Mud"}
+            roofType={formData.roof_type || "Bamboo/Timber-Light roof"}
+            damageLevel={showDamage ? calculateAverage() : null}
+          />
+
+          <div className="mt-10 p-4 bg-gray-50 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold">Hasar Durumu:</h3>
+              {showDamage ? (
+                <span className={`text-lg font-bold ${getDamageColor()}`}>
+                  {calculateAverage()}
+                </span>
+              ) : (
+                <span className="text-lg font-bold text-gray-500">-</span>
+              )}
+            </div>
+            <div className="text-sm text-gray-600 mb-2">
+              (1-3 arası, 1: az hasar, 3: çok hasar)
+            </div>
+            <div className={`font-medium ${getDamageColor()}`}>
+              {getDamageDescription()}
+            </div>
+
+            {showDamage && getDamageLevel() === "heavy" && (
+              <div className="mt-3 p-2 bg-red-100 text-red-800 rounded text-sm">
+                ⚠️ Bu bina ağır hasar görmüştür. Acilen tahliye edilmeli ve
+                yıkılmalıdır.
+              </div>
+            )}
+            {showDamage && getDamageLevel() === "medium" && (
+              <div className="mt-3 p-2 bg-orange-100 text-orange-800 rounded text-sm">
+                ⚠️ Bu binada önemli hasar var. Uzman kontrolü gereklidir.
+              </div>
+            )}
+            {showDamage && getDamageLevel() === "light" && (
+              <div className="mt-3 p-2 bg-yellow-100 text-yellow-800 rounded text-sm">
+                ℹ️ Bu binada hafif hasar var. Kontrol edilmesi önerilir.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
