@@ -103,14 +103,14 @@ const PredictDamage = () => {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 px-12 mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">
         Bina Hasar Tahmini Sistemi
       </h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Form Section */}
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+        <div className="w-full bg-white bg-stone-50 p-6 rounded-lg shadow-lg border border-stone-100">
           <h2 className="text-2xl font-semibold mb-4">
             Bina Bilgilerini Girin
           </h2>
@@ -296,9 +296,8 @@ const PredictDamage = () => {
             </div>
           )}
         </div>
-
         {/* Visualization Section */}
-        <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+        <div className="w-full bg-white bg-stone-50 p-6 rounded-lg shadow-lg border border-stone-100">
           <BuildingVisualization
             floors={parseInt(formData.count_floors_pre_eq) || 3}
             height={parseInt(formData.height_ft_pre_eq) || 30}

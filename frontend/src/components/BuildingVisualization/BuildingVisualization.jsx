@@ -23,14 +23,14 @@ const BuildingVisualization = ({
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-white bg-opacity-100 flex flex-col items-center justify-center z-30">
             {/* Large "YIKILDI" text */}
-            <div className="text-red-600 font-bold text-4xl mb-16 animate-pulse">
+            <div className="text-red-600 absolute bottom-48 font-bold text-4xl -mb-12 animate-pulse">
               YIKILDI
             </div>
 
             {/* Collapsed building representation */}
             <div className="relative w-full h-32 flex justify-center">
               {/* Rubble pile */}
-              <div className="absolute bottom-0 w-3/4 h-24 bg-gray-700 rounded-tr-full"></div>
+              <div className="absolute bottom-0 h-24 bg-gray-700 rounded-tr-full w-[102%]"></div>
 
               {/* Broken pieces */}
               <div className="absolute bottom-12 left-1/4 w-16 h-8 bg-gray-500 transform rotate-45"></div>
