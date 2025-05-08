@@ -126,6 +126,7 @@ export const AuthProvider = ({ children }) => {
     loginUser,
     registerUser,
     googleLogin,
+    getUserByToken,
     logoutUser,
     socialLoginUser,
   };

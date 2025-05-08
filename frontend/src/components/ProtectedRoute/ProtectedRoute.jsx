@@ -1,12 +1,12 @@
 // src/components/ProtectedRoute.jsx
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import AuthContext from "../../context/context";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
 
-  if (!user) {
+  if (user == null && localStorage.getItem("authTokens") == null) {
     // User yoksa login sayfasına gönder
     return (
       <Navigate

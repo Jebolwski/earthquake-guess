@@ -3,6 +3,7 @@ import AuthContext from "../../context/context";
 import { Eye, EyeOff } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { loginUser, socialLoginUser } = useContext(AuthContext);
@@ -41,51 +42,63 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
-
-      <form
-        onSubmit={handleLoginSubmit}
-        className="flex flex-col gap-4 w-full max-w-sm"
-      >
-        <input
-          type="text"
-          placeholder="Kullanıcı adı veya Email"
-          className="border p-2 rounded"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          required
-        />
-
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Şifre"
-            className="border p-2 rounded w-full pr-10"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <div
-            className="absolute inset-y-0 right-2 flex items-center cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-cover">
+      <div className="sm:w-3/4 md:w-1/2 lg:1/3 w-full shadow-lg border border-stone-100 p-4 border-stone-200 rounded-xl bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100">
+        <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
+        <form
+          onSubmit={handleLoginSubmit}
+          className="flex flex-col gap-4 w-full"
         >
-          Giriş Yap
-        </button>
+          <div className="w-full">
+            <p className="mb-1">Kullanıcı Adı</p>
+            <input
+              type="text"
+              className="border w-full p-2 rounded-md shadow-md focus:outline-none"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <p className="mb-1">Şifre</p>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="border p-2 rounded-md shadow-md focus:outline-none w-full pr-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-2 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </div>
+            </div>
+          </div>
 
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginError}
-        />
-      </form>
+          <button
+            type="submit"
+            className="bg-blue-400 shadow-md text-white py-2 rounded-md hover:bg-blue-500 duration-300"
+          >
+            Giriş Yap
+          </button>
+          <div className="flex gap-2">
+            <p>Dont have an account?</p>
+            <Link
+              to={"/register"}
+              className="underline text-blue-500"
+            >
+              Register
+            </Link>
+          </div>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
+        </form>
+      </div>
     </div>
   );
 };
