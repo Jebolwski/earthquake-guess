@@ -47,7 +47,7 @@ const Login = () => {
         <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
         <form
           onSubmit={handleLoginSubmit}
-          className="flex flex-col gap-4 w-full"
+          className="w-full"
         >
           <div className="w-full">
             <p className="mb-1">Kullanıcı Adı</p>
@@ -55,17 +55,19 @@ const Login = () => {
               type="text"
               className="border w-full p-2 rounded-md shadow-md focus:outline-none"
               value={identifier}
+              name="username"
               onChange={(e) => setIdentifier(e.target.value)}
               required
             />
           </div>
-          <div>
+          <div className="w-full mt-2">
             <p className="mb-1">Şifre</p>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 className="border p-2 rounded-md shadow-md focus:outline-none w-full pr-10"
                 value={password}
+                name="password"
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
@@ -80,19 +82,31 @@ const Login = () => {
 
           <button
             type="submit"
-            className="bg-blue-400 shadow-md text-white py-2 rounded-md hover:bg-blue-500 duration-300"
+            className="bg-blue-400 shadow-md text-white py-2 mt-2 w-full rounded-md hover:bg-blue-500 duration-300"
           >
             Giriş Yap
           </button>
-          <div className="flex gap-2">
-            <p>Dont have an account?</p>
-            <Link
-              to={"/register"}
-              className="underline text-blue-500"
-            >
-              Register
-            </Link>
+          <div className="flex flex-wrap justify-between my-2">
+            <div className="flex gap-2">
+              <p>Dont have an account?</p>
+              <Link
+                to={"/register"}
+                className="underline text-blue-500"
+              >
+                Register
+              </Link>
+            </div>
+            <div className="flex gap-2">
+              <p>Forgot your password?</p>
+              <Link
+                to={"/password-reset"}
+                className="underline text-green-500"
+              >
+                Reset Password
+              </Link>
+            </div>
           </div>
+
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={handleGoogleLoginError}

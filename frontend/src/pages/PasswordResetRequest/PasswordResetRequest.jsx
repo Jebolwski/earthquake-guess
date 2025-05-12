@@ -25,19 +25,32 @@ function PasswordResetRequest() {
   };
 
   return (
-    <div className="password-reset-request">
-      <h2>Şifre Sıfırlama İsteği</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="E-posta adresiniz"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button type="submit">Sıfırlama Linki Gönder</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="flex items-center justify-center h-[100vh]">
+      <div className="border-2  rounded-md shadow-md p-2 w-96 -mt-24">
+        <h2 className="font-semibold text-xl">Şifre Sıfırlama İsteği</h2>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-2"
+        >
+          <div>
+            <input
+              type="email"
+              placeholder="E-posta adresiniz"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="border-2 border-black focus:outline-none rounded-md px-2 py-1 w-full"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-green-500 border-2 py-1 px-2 shadow-md border-black mt-2 rounded-md w-full"
+          >
+            Sıfırlama Linki Gönder
+          </button>
+        </form>
+        {message && <p>{message}</p>}
+      </div>
     </div>
   );
 }

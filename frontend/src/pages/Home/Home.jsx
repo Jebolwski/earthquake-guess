@@ -6,99 +6,97 @@ const Home = () => {
   const { user, logoutUser } = useContext(AuthContext);
 
   return (
-    <div className="px-6 py-4 bg-stone-200 min-h-[100vh]">
-      <div className="bg-stone-50 border border-stone-200 rounded-lg p-2 shadow-md flex justify-between items-center">
-        <div className="flex items-center gap-1">
+    <div className="px-6 py-4 bg-[#FED260] min-h-[100vh]">
+      <img
+        src="/src/assets/clouds.svg"
+        alt="clouds1"
+        className="w-fit absolute left-6 top-16 z-10"
+      />
+      <img
+        src="/src/assets/clouds.svg"
+        alt="clouds2"
+        className="w-fit absolute right-0 bottom-12 z-10"
+      />
+      <img
+        src="/src/assets/left-bottom-home.svg"
+        alt="clouds2"
+        className="w-fit absolute left-0 bottom-0 z-10"
+      />
+      <img
+        src="/src/assets/clouds.svg"
+        alt="clouds2"
+        className="w-fit absolute right-0 top-12 z-10 scale-x-[-1]"
+      />
+
+      <div className="bg-white border-2 border-black rounded-3xl p-2 flex justify-between items-center relative z-20">
+        <div className="flex items-center gap-1 z-30">
           <img
             src="https://cdn-icons-png.flaticon.com/512/9140/9140425.png"
-            className="w-8"
+            className="w-10"
             alt="Logo"
           />
-          <p>Guerthquake</p>
+          <h1 className="text-2xl font-extrabold text-[#ce636f] border-text">
+            GUERTHQUAKE
+          </h1>
         </div>
         <div>{user?.username}</div>
         <button
           onClick={logoutUser}
-          className="bg-stone-100/30 border border-stone-200/70 py-1 px-2 rounded-lg shadow-md"
+          className="bg-stone-500 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
         >
           Logout
         </button>
       </div>
-      <div className="flex gap-3 mt-5">
-        <div className="w-1/3">
-          <div className="shadow-md border border-stone-200 rounded-lg px-4 py-2 bg-stone-50">
-            <p className="font-semibold">Last Predictions</p>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-green-500">Pred : 1.21</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500">Pred : 2.21</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-red-500">Pred : 2.53</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-green-500">Pred : 1.48</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500">Pred : 1.68</div>
-            </div>
+      <div className="flex lg:flex-nowrap flex-wrap justify-between lg:gap-3 gap-0 mt-5">
+        <div className="lg:w-1/3 w-full z-20">
+          <div className="border-2 border-black rounded-3xl px-4 py-2 bg-white">
+            <h2 className="text-2xl text-center font-extrabold text-[#ce636f] border-text">
+              GUERTHQUAKE NEDİR?
+            </h2>
+            <p className="mt-3 font-semibold">
+              2015 yılında Nepal'de gerçekleşen Gorkha depremine ait gerçek
+              verilerle eğitilen bir makine öğrenimi modeli geliştirilmiştir. Bu
+              model, kullanıcıların sağladığı bina bilgilerine göre, olası bir
+              depremde yapının ne düzeyde hasar alabileceğini tahmin etmektedir.
+            </p>
+            <p className="mt-3 font-semibold">
+              Web uygulamamız üzerinden bina bilgilerinizi (kat sayısı, yapı
+              tipi, bina yaşı vb.) kolayca girerek, binanızın potansiyel risk
+              durumunu anında öğrenebilirsiniz. Böylece, afetlere karşı daha
+              bilinçli kararlar almanıza ve önlem planlamanıza katkı sağlamayı
+              amaçlıyoruz.
+            </p>
           </div>
-          <div className="shadow-md border border-stone-200 rounded-lg px-4 py-2 bg-stone-50 mt-2">
-            <p className="font-semibold">Saved Buildings</p>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500">Pred : 1.68</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500">Pred : 1.68</div>
-            </div>
-            <div className="flex bg-stone-200/50 border border-stone-200 px-2 rounded-md items-center justify-between shadow-md mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500">Pred : 1.68</div>
-            </div>
+          <div className="border-2 border-black rounded-3xl px-4 py-2 bg-white mt-2">
+            <h2 className="text-center text-2xl font-extrabold text-[#ce636f] border-text">
+              DEPREM ANINDA NE YAPILMALI?
+            </h2>
+            <p className="mt-2 font-semibold">
+              • Sakin olun: Panik yapmak yerine bulunduğunuz yerde güvenli bir
+              pozisyon alın.
+            </p>
+            <p className="font-semibold">
+              • Çök-Kapan-Tutun hareketini uygulayın: Masa altı gibi sağlam bir
+              nesnenin altına girin, başınızı koruyun ve sabit bir yere tutunun.
+            </p>
+            <p className="font-semibold">
+              • Pencerelerden ve devrilebilecek eşyalardan uzak durun.
+            </p>
+            <p className="font-semibold">
+              • Açık alandaysanız, binalardan, elektrik direklerinden ve
+              ağaçlardan uzak durun.
+            </p>
+            <p className="font-semibold">
+              • Asansör kullanmayın. Deprem anında ya da hemen sonrasında
+              asansöre binmek tehlikelidir.
+            </p>
+            <p className="text-red-600 underline font-semibold mt-1">
+              Daha detaylı bilgi almak için tıklayın.
+            </p>
           </div>
         </div>
-        <div className="w-1/4">
-          <div className="shadow-md border border-stone-200 rounded-lg px-2 py-2 bg-stone-50">
+        <div className="lg:w-1/3 md:w-[49%] w-full z-20 lg:mt-0 mt-3">
+          <div className="border-2 border-black rounded-3xl px-4 py-2 bg-white">
             <p className="text-lg font-semibold mb-2">Guess Building Damage</p>
             <Link to={"/predict-damage"}>
               <div className="relative h-96 w-full overflow-hidden rounded-lg shadow-xl">
@@ -128,16 +126,81 @@ const Home = () => {
               </div>
             </Link>
           </div>
-          <div className="shadow-md border border-stone-200 rounded-lg px-4 py-2 bg-stone-50 mt-2">
-            <p>bölüm 1</p>
-          </div>
         </div>
-        <div className="w-5/12">
-          <div className="shadow-md border border-stone-200 rounded-lg px-4 py-2 bg-stone-50">
-            <p>bölüm 2</p>
+        <div className="lg:w-1/3 md:w-[49%] w-full z-20 lg:mt-0 mt-3">
+          <div className="border-2 border-black rounded-3xl p-2 bg-white">
+            <h2 className="text-2xl text-center font-extrabold text-[#ce636f] border-text">
+              SON TAHMİNLER
+            </h2>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-green-500 font-bold">Pred : 1.21</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-orange-500 font-bold">Pred : 2.21</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-red-500 font-bold">Pred : 2.53</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-green-500 font-bold">Pred : 1.48</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-orange-500 font-bold">Pred : 1.68</div>
+            </div>
           </div>
-          <div className="shadow-md border border-stone-200 rounded-lg px-4 py-2 bg-stone-50 mt-2">
-            <p>bölüm 3 </p>
+          <div className="border-2 border-black rounded-3xl p-2 bg-white mt-2">
+            <h2 className="text-2xl text-center font-extrabold text-[#ce636f] border-text">
+              KAYDEDİLMİŞ VERİLER
+            </h2>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-orange-500 font-bold">Pred : 1.68</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-green-500 font-bold">Pred : 1.48</div>
+            </div>
+            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
+              <div className="flex items-center gap-3">
+                <p>BL : 22</p>
+                <p>BS : 2.4</p>
+                <p>BA : 13</p>
+              </div>
+              <div className="text-orange-500 font-bold">Pred : 1.68</div>
+            </div>
           </div>
         </div>
       </div>
