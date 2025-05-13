@@ -42,6 +42,7 @@ class Building(models.Model):
     land_surface_condition=models.CharField(max_length=25,choices=land_surface_condition_choices,blank=False,null=False)
     ground_floor_type=models.CharField(max_length=25,choices=ground_floor_type_choices,blank=False,null=False)
     date_added = models.DateTimeField(auto_now_add=True)
+    prediction = models.FloatField(null=True,blank=True)
 
     def __str__(self):
         return str(str(self.building_age) + " " + str(self.building_height))

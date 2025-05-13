@@ -1,6 +1,5 @@
 from django.urls import path, include
 from . import views
-from dj_rest_auth.views import PasswordResetView, PasswordResetConfirmView
 
 urlpatterns = [
     path('', views.Routes),
@@ -15,7 +14,9 @@ urlpatterns = [
 
 
     path('predict-damage/', views.predict_damage, name='predict-damage'),
-
+    path('predict-damage-and-save/', views.predict_damage_and_save, name='predict-damage-and-save'),
+    path('latest-predictions/', views.latest_predictions, name='latest-predictions'),
+    path('get-building/<int:building_id>/', views.get_building_by_id, name='get_building_by_id'),
     # Password Reset
     path('user/password/reset/', views.custom_password_reset, name='custom_password_reset'),
     path('user/password/reset/confirm/<uidb64>/<token>/', views.custom_password_reset_confirm, name='custom_password_reset_confirm'),

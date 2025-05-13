@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
   axios.defaults.baseURL = "http://localhost:8000";
 
   const [user, setUser] = useState(null);
+  const [latestPredictions, setLatestPredictions] = useState();
+  const [prediction, setPrediction] = useState();
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens"))
@@ -114,6 +116,60 @@ export const AuthProvider = ({ children }) => {
       console.error("Login sırasında hata oluştu:", error);
     }
   };
+
+  const getLatestPredictions = async () => {
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+      const response = await axios.get("/api/latest-predictions/", {
+        headers: {
+          Authorization: `Token ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        setLatestPredictions(response.data);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("Google ile giriş yapılamadı!");
+    }
+  };
+
+  const getAPrediction = async (id) => {
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+
+      if (!accessToken) {
+        alert("Giriş yapmanız gerekiyor.");
+        return;
+      }
+
+      const response = await axios.get(`/api/get-building/${id}`, {
+        headers: {
+          Authorization: `Token ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        setPrediction(response.data);
+      }
+    } catch (error) {
+      console.error("Tahminler alınırken hata:", error);
+
+      if (error.response?.status === 401) {
+        alert("Yetkisiz erişim. Lütfen tekrar giriş yapın.");
+        // İsteğe bağlı: kullanıcıyı login sayfasına yönlendirme
+        // navigate("/login");
+      } else {
+        console.log("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    }
+  };
+
   useEffect(() => {
     if (authTokens) {
       getUserByToken(authTokens.access);
@@ -129,6 +185,10 @@ export const AuthProvider = ({ children }) => {
     getUserByToken,
     logoutUser,
     socialLoginUser,
+    getLatestPredictions,
+    latestPredictions,
+    getAPrediction,
+    prediction,
   };
 
   return (

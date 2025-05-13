@@ -41,13 +41,43 @@ const PredictDamage = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Token ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
       );
 
       setPredictions(response.data);
+      setShowDamage(true); // Show damage after prediction
+    } catch (error) {
+      console.error(error);
+      alert("Tahmin yapılırken bir hata oluştu");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const predictAndSave = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setShowDamage(false);
+
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/predict-damage-and-save/",
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setPredictions(response.data.model_predictions);
       setShowDamage(true); // Show damage after prediction
     } catch (error) {
       console.error(error);
@@ -115,10 +145,7 @@ const PredictDamage = () => {
             Bina Bilgilerini Girin
           </h2>
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="form-group">
               <label className="block mb-1 font-medium">
                 Plinth Area (sq ft)
@@ -265,17 +292,32 @@ const PredictDamage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className={`w-full py-2 px-4 rounded text-white font-medium ${
-                  isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-                }`}
-              >
-                {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et"}
-              </button>
+              <div className="flex gap-3 items-center">
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className={`w-full py-2 px-4 rounded text-white font-medium ${
+                    isLoading
+                      ? "bg-gray-400"
+                      : "bg-blue-600 hover:bg-blue-700 duration-200"
+                  }`}
+                >
+                  {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et"}
+                </button>
+                <button
+                  onClick={predictAndSave}
+                  disabled={isLoading}
+                  className={`w-full py-2 px-4 rounded text-white font-medium ${
+                    isLoading
+                      ? "bg-gray-400"
+                      : "bg-cyan-600 hover:bg-cyan-700 duration-200"
+                  }`}
+                >
+                  {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et ve Kaydet"}
+                </button>
+              </div>
             </div>
-          </form>
+          </div>
 
           {predictions && (
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">

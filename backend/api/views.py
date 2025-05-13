@@ -2,10 +2,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from dj_rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from rest_framework.permissions import AllowAny,IsAuthenticated
 from dotenv import load_dotenv
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User
@@ -15,38 +12,24 @@ from rest_framework import status
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth import update_session_auth_hash
-from allauth.socialaccount.models import SocialAccount, SocialLogin
 from django.contrib.auth import get_user_model
-from django.core.exceptions import MultipleObjectsReturned
-from rest_framework.views import APIView
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.models import SocialLogin
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
-from allauth.socialaccount.helpers import complete_social_login
-from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.auth import get_user_model
 import jwt
 from django.conf import settings
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.models import SocialLogin
-from rest_framework.permissions import IsAuthenticated
-
+from . import models
+from . import serializers
 
 load_dotenv()
 
@@ -366,3 +349,125 @@ def predict_damage(request):
     except Exception as e:
         print("6")
         return Response({'error': str(e)}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def predict_damage_and_save(request):
+    land_surface_condition_mapping = {
+        'Flat': 0,
+        'Moderate slope': 1,
+        'Steep slope': 2
+    }
+    
+    roof_type_mapping = {
+        'Bamboo/Timber-Light roof': 0,
+        'Bamboo/Timber-Heavy roof': 1,
+        'RCC/RB/RBC': 2
+    }
+    
+    foundation_type_mapping = {
+        'Mud mortar-Stone/Brick': 0,
+        'Bamboo/Timber': 1,
+        'Cement-Stone/Brick': 2,
+        'RC': 3
+    }
+    
+    ground_floor_type_mapping = {
+        'Mud': 0,
+        'RC': 1,
+        'Brick/Stone': 2,
+        'Timber': 3
+    }
+
+    try:
+        data = request.data
+
+        # Tahmin için verileri hazırla
+        input_data = [
+            float(data['plinth_area_sq_ft']),
+            float(data['magnitude']),
+            land_surface_condition_mapping[data['land_surface_condition']],
+            int(data['count_floors_pre_eq']),
+            float(data['height_ft_pre_eq']),
+            roof_type_mapping[data['roof_type']],
+            int(data['age_building']),
+            foundation_type_mapping[data['foundation_type']],
+            ground_floor_type_mapping[data['ground_floor_type']]
+        ]
+
+        input_array = np.array(input_data).reshape(1, -1)
+
+        # Modellerin tahminini al
+        models_dir = os.path.join(os.path.dirname(__file__), 'models')
+        model_files = [
+            "RandomForest_model_9features.sav",
+            "GradientBoosting_model_9features.sav",
+            "DecisionTree_model_9features.sav",
+            "KNeighbors_model_9features.sav",
+            "LinearRegression_model_9features.sav",
+            "MLPRegressor_model_9features.sav",
+            "AdaBoost_model_9features.sav"
+        ]
+
+        predictions = {}
+        prediction_values = []
+
+        for model_file in model_files:
+            model_path = os.path.join(models_dir, model_file)
+            with open(model_path, 'rb') as f:
+                model = pickle.load(f)
+            prediction = model.predict(input_array)[0]
+            predictions[model_file.replace("_model_9features.sav", "")] = prediction
+            prediction_values.append(prediction)
+
+        # Ortalama tahmin
+        avg_prediction = sum(prediction_values) / len(prediction_values)
+
+        # Building nesnesini oluştur ve veritabanına kaydet
+        building = models.Building.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            building_floor_count=data['count_floors_pre_eq'],
+            building_height=data['height_ft_pre_eq'],
+            building_age=data['age_building'],
+            building_plinth_area=data['plinth_area_sq_ft'],
+            earthquake_magnitude=data['magnitude'],
+            foundation_type=data['foundation_type'],
+            roof_type=data['roof_type'],
+            land_surface_condition=data['land_surface_condition'],
+            ground_floor_type=data['ground_floor_type'],
+            prediction=round(avg_prediction,3)
+        )
+        print(building)
+
+        return Response({
+            'model_predictions': predictions,
+            'average_prediction': avg_prediction,
+            'building_id': building.id
+        }, status=200)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def latest_predictions(request):
+    buildings = models.Building.objects.filter(user=request.user).order_by('-date_added')  # en son eklenenler en üstte
+    serializer = serializers.BuildingSerializer(buildings, many=True)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_building_by_id(request, building_id):
+    try:
+        building = models.Building.objects.get(id=building_id, user=request.user)  # Kullanıcıya ait mi kontrol edilir
+    except models.Building.DoesNotExist:
+        return Response({'error': 'Building not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = serializers.BuildingSerializer(building)
+    return Response(serializer.data, status=200)
+
+
+

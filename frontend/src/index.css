@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: raleway;
+  src: url("../src/assets/fonts/Raleway-Medium.ttf");
+}
+
+@import "tailwindcss";
+
+@theme {
+  --font-raleway: raleway, "sans-serif";
+}

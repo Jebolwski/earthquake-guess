@@ -42,18 +42,23 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-cover">
-      <div className="sm:w-3/4 md:w-1/2 lg:1/3 w-full shadow-lg border border-stone-100 p-4 border-stone-200 rounded-xl bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100">
+    <div className="flex flex-col lg:items-end items-center min-h-screen lg:px-12 px-4 bg-cover bg-[#FED260]">
+      <img
+        src="/src/assets/login.svg"
+        alt="login"
+        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0"
+      />
+      <div className="sm:w-3/4 md:w-2/3 lg:w-6/12 w-full shadow-lg mt-28 p-4 rounded-xl bg-[#ececec] border-2 border-black z-20">
         <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
         <form
           onSubmit={handleLoginSubmit}
           className="w-full"
         >
           <div className="w-full">
-            <p className="mb-1">Kullanıcı Adı</p>
+            <p className="mb-1 text-lg font-semibold">Kullanıcı Adı</p>
             <input
               type="text"
-              className="border w-full p-2 rounded-md shadow-md focus:outline-none"
+              className="border-2 border-black w-full p-2 rounded-md focus:outline-none"
               value={identifier}
               name="username"
               onChange={(e) => setIdentifier(e.target.value)}
@@ -61,11 +66,11 @@ const Login = () => {
             />
           </div>
           <div className="w-full mt-2">
-            <p className="mb-1">Şifre</p>
+            <p className="mb-1 text-lg font-semibold">Şifre</p>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="border p-2 rounded-md shadow-md focus:outline-none w-full pr-10"
+                className="border-2 border-black p-2 rounded-md focus:outline-none w-full pr-10"
                 value={password}
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -82,12 +87,12 @@ const Login = () => {
 
           <button
             type="submit"
-            className="bg-blue-400 shadow-md text-white py-2 mt-2 w-full rounded-md hover:bg-blue-500 duration-300"
+            className="bg-blue-400 border-2 border-black text-white font-semibold text-lg py-2 mt-2 w-full rounded-md hover:bg-blue-500 duration-300"
           >
             Giriş Yap
           </button>
           <div className="flex flex-wrap justify-between my-2">
-            <div className="flex gap-2">
+            <div className="flex gap-2 font-semibold">
               <p>Dont have an account?</p>
               <Link
                 to={"/register"}
@@ -96,7 +101,7 @@ const Login = () => {
                 Register
               </Link>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 font-semibold">
               <p>Forgot your password?</p>
               <Link
                 to={"/password-reset"}

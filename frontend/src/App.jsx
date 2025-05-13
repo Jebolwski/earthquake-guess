@@ -15,6 +15,8 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import PredictDamage from "./pages/PredictDamage/PredictDamage";
+import PredictionDetail from "./pages/PredictionDetail/PredictionDetail";
+import AddBuildingData from "./pages/AddBuildingData/AddBuildingData";
 
 function App() {
   return (
@@ -48,6 +50,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/prediciton-detail/:id"
+                element={
+                  <ProtectedRoute>
+                    <PredictionDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add-building-data"
+                element={
+                  <ProtectedRoute>
+                    <AddBuildingData />
                   </ProtectedRoute>
                 }
               />
