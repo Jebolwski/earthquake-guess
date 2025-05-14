@@ -453,7 +453,7 @@ def predict_damage_and_save(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def latest_predictions(request):
-    buildings = models.Building.objects.filter(user=request.user).order_by('-date_added')  # en son eklenenler en üstte
+    buildings = models.Building.objects.all().order_by('-date_added')[:6]  # en son eklenenler en üstte
     serializer = serializers.BuildingSerializer(buildings, many=True)
     return Response(serializer.data, status=200)
 

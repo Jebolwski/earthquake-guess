@@ -10,8 +10,6 @@ const Home = () => {
     getLatestPredictions();
   }, []);
 
-  console.log(latestPredictions);
-
   return (
     <div className="px-6 py-4 bg-[#FED260] min-h-[100vh] font-raleway">
       <img
@@ -35,7 +33,7 @@ const Home = () => {
         className="w-fit absolute right-0 top-12 z-10 scale-x-[-1]"
       />
 
-      <div className="bg-[#ececec] border-2 border-black rounded-3xl p-2 flex justify-between items-center relative z-20">
+      <div className="bg-[#ececec] border-2 border-black rounded-3xl p-2 px-3 flex justify-between items-center relative z-20 flex-wrap gap-3">
         <div className="flex items-center gap-1 z-30">
           <img
             src="https://cdn-icons-png.flaticon.com/512/9140/9140425.png"
@@ -51,9 +49,9 @@ const Home = () => {
         </div>
         <button
           onClick={logoutUser}
-          className="bg-stone-500 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
+          className="bg-red-400 hover:bg-red-500 duration-200 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
         >
-          Logout
+          Çıkış Yap
         </button>
       </div>
       <div className="flex lg:flex-nowrap flex-wrap justify-between lg:gap-3 gap-0 mt-5">
@@ -172,6 +170,9 @@ const Home = () => {
             <h2 className="text-2xl text-center font-extrabold text-[#ce636f] border-text">
               SON TAHMİNLER
             </h2>
+            <p className="font-semibold mt-1 text-center">
+              Uygulama üzerinden gerçekleştirilen son tahminlerdir.
+            </p>
             {latestPredictions?.map((data) => {
               return (
                 <Link

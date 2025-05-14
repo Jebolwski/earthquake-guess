@@ -46,7 +46,7 @@ const Login = () => {
       <img
         src="/src/assets/login.svg"
         alt="login"
-        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0"
+        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0 select-none"
       />
       <div className="sm:w-3/4 md:w-2/3 lg:w-6/12 w-full shadow-lg mt-28 p-4 rounded-xl bg-[#ececec] border-2 border-black z-20">
         <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
@@ -93,21 +93,21 @@ const Login = () => {
           </button>
           <div className="flex flex-wrap justify-between my-2">
             <div className="flex gap-2 font-semibold">
-              <p>Dont have an account?</p>
+              <p>Hesabın yok mu?</p>
               <Link
                 to={"/register"}
                 className="underline text-blue-500"
               >
-                Register
+                Kayıt Ol
               </Link>
             </div>
             <div className="flex gap-2 font-semibold">
-              <p>Forgot your password?</p>
+              <p>Şifreni mi unuttun?</p>
               <Link
                 to={"/password-reset"}
                 className="underline text-green-500"
               >
-                Reset Password
+                Şifre Sıfırla
               </Link>
             </div>
           </div>

@@ -133,19 +133,30 @@ const PredictDamage = () => {
   };
 
   return (
-    <div className="p-6 px-12 mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Bina Hasar Tahmini Sistemi
-      </h1>
+    <div className="p-6 px-12 mx-auto bg-[#FED260] min-h-[100vh] font-raleway">
+      <img
+        src="/src/assets/login.svg"
+        alt="login"
+        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0 select-none"
+      />
+      <div>
+        <div className="flex justify-center">
+          <div className="text-3xl font-bold mb-6 text-center bg-white border-2 border-black rounded-xl p-2 px-4 z-20 w-fit">
+            <h2 className="text-4xl text-center font-extrabold text-[#ce636f] border-text">
+              BİNA HASAR TAHMİNİ
+            </h2>
+          </div>
+        </div>
+      </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex lg:flex-nowrap flex-wrap gap-8 z-20">
         {/* Form Section */}
-        <div className="w-full bg-white bg-stone-50 p-6 rounded-lg shadow-lg border border-stone-100">
-          <h2 className="text-2xl font-semibold mb-4">
-            Bina Bilgilerini Girin
+        <div className="w-full bg-white bg-stone-50 p-6 h-fit rounded-xl shadow-lg z-20 border-2 border-black">
+          <h2 className="text-3xl font-extrabold text-[#ce636f] border-text">
+            BİNA BİLGİLERİNİ GİRİN
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="form-group">
               <label className="block mb-1 font-medium">
                 Plinth Area (sq ft)
@@ -155,7 +166,7 @@ const PredictDamage = () => {
                 name="plinth_area_sq_ft"
                 value={formData.plinth_area_sq_ft}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
                 min="100"
               />
@@ -169,7 +180,7 @@ const PredictDamage = () => {
                 name="magnitude"
                 value={formData.magnitude}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
                 min="0.1"
               />
@@ -181,7 +192,7 @@ const PredictDamage = () => {
                 name="land_surface_condition"
                 value={formData.land_surface_condition}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
               >
                 <option value="">Seçiniz</option>
@@ -198,7 +209,7 @@ const PredictDamage = () => {
                 name="count_floors_pre_eq"
                 value={formData.count_floors_pre_eq}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
                 min="1"
                 max="10"
@@ -214,7 +225,7 @@ const PredictDamage = () => {
                 name="height_ft_pre_eq"
                 value={formData.height_ft_pre_eq}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
                 min="10"
                 max="100"
@@ -227,7 +238,7 @@ const PredictDamage = () => {
                 name="roof_type"
                 value={formData.roof_type}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
               >
                 <option value="">Seçiniz</option>
@@ -248,7 +259,7 @@ const PredictDamage = () => {
                 name="age_building"
                 value={formData.age_building}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
                 min="1"
                 max="100"
@@ -261,7 +272,7 @@ const PredictDamage = () => {
                 name="foundation_type"
                 value={formData.foundation_type}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
               >
                 <option value="">Seçiniz</option>
@@ -280,7 +291,7 @@ const PredictDamage = () => {
                 name="ground_floor_type"
                 value={formData.ground_floor_type}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border-2 border-black rounded-lg font-semibold"
                 required
               >
                 <option value="">Seçiniz</option>
@@ -292,11 +303,11 @@ const PredictDamage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <div className="flex gap-3 items-center">
+              <div className="flex lg:flex-nowrap flex-wrap gap-3 items-center">
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className={`w-full py-2 px-4 rounded text-white font-medium ${
+                  className={`w-full py-2 px-4 rounded-xl text-white font-semibold text-lg border-2 border-black ${
                     isLoading
                       ? "bg-gray-400"
                       : "bg-blue-600 hover:bg-blue-700 duration-200"
@@ -307,7 +318,7 @@ const PredictDamage = () => {
                 <button
                   onClick={predictAndSave}
                   disabled={isLoading}
-                  className={`w-full py-2 px-4 rounded text-white font-medium ${
+                  className={`w-full py-2 px-4 rounded-xl text-white font-semibold text-lg border-2 border-black ${
                     isLoading
                       ? "bg-gray-400"
                       : "bg-cyan-600 hover:bg-cyan-700 duration-200"
@@ -339,7 +350,7 @@ const PredictDamage = () => {
           )}
         </div>
         {/* Visualization Section */}
-        <div className="w-full bg-white bg-stone-50 p-6 rounded-lg shadow-lg border border-stone-100">
+        <div className="w-full bg-white bg-stone-50 p-6 h-fit rounded-xl shadow-lg z-20 border-2 border-black">
           <BuildingVisualization
             floors={parseInt(formData.count_floors_pre_eq) || 3}
             height={parseInt(formData.height_ft_pre_eq) || 30}
@@ -354,9 +365,9 @@ const PredictDamage = () => {
             damageLevel={showDamage ? calculateAverage() : null}
           />
 
-          <div className="mt-10 p-4 bg-gray-50 rounded-lg">
+          <div className="mt-10 p-4 bg-gray-50 rounded-xl border-2 border-black">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold">Hasar Durumu:</h3>
+              <h3 className="text-lg font-semibold">Hasar Durumu</h3>
               {showDamage ? (
                 <span className={`text-lg font-bold ${getDamageColor()}`}>
                   {calculateAverage()}
