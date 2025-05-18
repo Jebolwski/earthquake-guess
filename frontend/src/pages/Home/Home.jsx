@@ -3,11 +3,18 @@ import AuthContext from "../../context/context";
 import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const { user, logoutUser, getLatestPredictions, latestPredictions } =
-    useContext(AuthContext);
+  const {
+    user,
+    logoutUser,
+    getLatestPredictions,
+    latestPredictions,
+    getLatestAddedFullBuildings,
+    fullBuildings,
+  } = useContext(AuthContext);
 
   useEffect(() => {
     getLatestPredictions();
+    getLatestAddedFullBuildings();
   }, []);
 
   return (
@@ -205,30 +212,27 @@ const Home = () => {
                 binanızın bilgilerini girerek hasar bilgilerini girin.
               </p>
             </Link>
-            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500 font-bold">Pred : 1.68</div>
-            </div>
-            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-green-500 font-bold">Pred : 1.48</div>
-            </div>
-            <div className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2">
-              <div className="flex items-center gap-3">
-                <p>BL : 22</p>
-                <p>BS : 2.4</p>
-                <p>BA : 13</p>
-              </div>
-              <div className="text-orange-500 font-bold">Pred : 1.68</div>
-            </div>
+            {fullBuildings?.map((data) => {
+              return (
+                <Link
+                  to={`/prediciton-detail/${data.id}`}
+                  key={data.id}
+                  className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <p>BH : {data.building_height_pre_eq}</p>
+                    <p>BA : {data.building_age}</p>
+                    <p>MAG : {data.earthquake_magnitude}</p>
+                  </div>
+                  <div className="text-green-500 font-bold">
+                    Pred :{" "}
+                    <span className="font-extrabold">
+                      {data.felt_damage.toFixed(2)}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>

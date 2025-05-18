@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [latestPredictions, setLatestPredictions] = useState();
   const [prediction, setPrediction] = useState();
+  const [fullBuildings, setFullBuildings] = useState();
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens"))
@@ -137,6 +138,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getLatestAddedFullBuildings = async () => {
+    console.log("asldhaslşhd");
+
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+      const response = await axios.get("/api/latest-full-buildings/", {
+        headers: {
+          Authorization: `Token ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setFullBuildings(response.data);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getAPrediction = async (id) => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
@@ -189,6 +212,8 @@ export const AuthProvider = ({ children }) => {
     latestPredictions,
     getAPrediction,
     prediction,
+    getLatestAddedFullBuildings,
+    fullBuildings,
   };
 
   return (

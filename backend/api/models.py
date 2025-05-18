@@ -89,7 +89,8 @@ class BuildingFullData(models.Model):
     roof_type = models.CharField(max_length=25,choices=roof_type_choices,blank=False,null=False)
     land_surface_condition=models.CharField(max_length=25,choices=land_surface_condition_choices,blank=False,null=False)
     ground_floor_type=models.CharField(max_length=25,choices=ground_floor_type_choices,blank=False,null=False)
+    felt_damage=models.FloatField(null=False,blank=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(str(self.building_age) + " " + str(self.building_height))
+        return str(str(self.building_age) + " " + str(self.building_height_pre_eq))

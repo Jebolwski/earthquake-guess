@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Building
+from .models import Building,BuildingFullData
 
 class BuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Building
+        fields = '__all__'  # Veya belirli alanları yazabilirsin
+
+class BuildingFullDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuildingFullData
         fields = '__all__'  # Veya belirli alanları yazabilirsin
 
 

@@ -457,6 +457,13 @@ def latest_predictions(request):
     serializer = serializers.BuildingSerializer(buildings, many=True)
     return Response(serializer.data, status=200)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def latest_full_buildings(request):
+    building_full_datas = models.BuildingFullData.objects.all().order_by('-date_added')[:6]  # en son eklenenler en üstte
+    serializer = serializers.BuildingFullDataSerializer(building_full_datas, many=True)
+    return Response(serializer.data, status=200)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -468,6 +475,35 @@ def get_building_by_id(request, building_id):
 
     serializer = serializers.BuildingSerializer(building)
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_real_data(request):
+
+    data = request.data
+    # FullData modeline uygun nesne oluşturuluyor
+    building_full = models.BuildingFullData.objects.create(
+        user=request.user,
+        building_floor_count_pre_eq=data['count_floors_pre_eq'],
+        building_floor_count_post_eq=data['count_floors_post_eq'],
+        building_height_pre_eq=data['height_ft_pre_eq'],
+        building_height_post_eq=data['height_ft_post_eq'],
+        building_age=data['age_building'],
+        building_plinth_area=data['plinth_area_sq_ft'],
+        earthquake_magnitude=data['magnitude'],
+        foundation_type=data['foundation_type'],
+        roof_type=data['roof_type'],
+        land_surface_condition=data['land_surface_condition'],
+        ground_floor_type=data['ground_floor_type'],
+        felt_damage=data['felt_damage'],
+    )
+
+    return Response({
+        'message': 'Full building data saved successfully',
+        'full_building_id': building_full.id
+    }, status=status.HTTP_201_CREATED)
+
 
 
 

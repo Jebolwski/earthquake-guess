@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import PredictDamage from "./pages/PredictDamage/PredictDamage";
 import PredictionDetail from "./pages/PredictionDetail/PredictionDetail";
 import AddBuildingData from "./pages/AddBuildingData/AddBuildingData";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -84,6 +85,10 @@ function App() {
             </Routes>
           </AuthProvider>
         </Router>
+        <Toaster
+          position="bottom-right"
+          reverseOrder={false}
+        />
       </GoogleOAuthProvider>
     </div>
   );

@@ -55,16 +55,16 @@ SITE_ID = 3
 # REST_USE_JWT = True
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # EN ÜSTE AL
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # senin projen için varsa
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
+
 
 
 AUTHENTICATION_BACKENDS = [
