@@ -61,7 +61,7 @@ const AddBuildingData = () => {
   };
 
   return (
-    <div className="p-6 px-12 mx-auto bg-[#FED260] min-h-[100vh] font-raleway">
+    <div className="p-6 px-12 mx-auto bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
       <img
         src="/src/assets/login.svg"
         alt="login"
@@ -70,7 +70,7 @@ const AddBuildingData = () => {
       <div>
         <div className="flex justify-center">
           <div className="text-3xl font-bold mb-6 text-center bg-white border-2 border-black rounded-xl p-2 px-4 z-20 w-fit">
-            <h2 className="text-4xl text-center font-extrabold text-[#ce636f] border-text">
+            <h2 className="text-3xl text-center font-extrabold text-[#ce636f] border-text">
               GEÇMİŞ BİNA VERİSİ EKLE
             </h2>
           </div>
@@ -79,7 +79,7 @@ const AddBuildingData = () => {
       <div className="flex lg:flex-nowrap flex-wrap gap-8 z-20">
         {/* Form Section */}
         <div className="w-full bg-white bg-stone-50 p-6 h-fit rounded-xl shadow-lg z-20 border-2 border-black">
-          <h2 className="text-3xl font-extrabold text-[#ce636f] border-text">
+          <h2 className="text-2xl font-extrabold text-[#ce636f] border-text">
             BİNA BİLGİLERİNİ GİRİN
           </h2>
 

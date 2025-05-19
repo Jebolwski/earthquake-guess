@@ -18,7 +18,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="px-6 py-4 bg-[#FED260] min-h-[100vh] font-raleway">
+    <div className="px-6 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
       <img
         src="/src/assets/clouds.svg"
         alt="clouds1"
@@ -40,27 +40,6 @@ const Home = () => {
         className="w-fit absolute right-0 top-12 z-10 scale-x-[-1]"
       />
 
-      <div className="bg-[#ececec] border-2 border-black rounded-3xl p-2 px-3 flex justify-between items-center relative z-20 flex-wrap gap-3">
-        <div className="flex items-center gap-1 z-30">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/9140/9140425.png"
-            className="w-10"
-            alt="Logo"
-          />
-          <h1 className="text-2xl font-extrabold text-[#ce636f] border-text">
-            GUERTHQUAKE
-          </h1>
-        </div>
-        <div className="font-bold text-xl">
-          {user?.username} ({user?.email})
-        </div>
-        <button
-          onClick={logoutUser}
-          className="bg-red-400 hover:bg-red-500 duration-200 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
-        >
-          Çıkış Yap
-        </button>
-      </div>
       <div className="flex lg:flex-nowrap flex-wrap justify-between lg:gap-3 gap-0 mt-5">
         <div className="lg:w-5/12 w-full z-20">
           <div className="border-2 border-black rounded-3xl px-4 py-2 bg-[#ececec]">
@@ -105,37 +84,13 @@ const Home = () => {
               asansöre binmek tehlikelidir.
             </p>
             <div className="flex">
-              <div className="text-red-600 bg-red-500 hover:bg-red-700 duration-200 cursor-pointer text-white border-2 border-black px-2 py-1 rounded-xl font-semibold mt-1">
+              <Link
+                to={"/what-to-do"}
+                className="text-red-600 bg-red-500 hover:bg-red-700 duration-200 cursor-pointer text-white border-2 border-black px-2 py-1 rounded-xl font-semibold mt-1"
+              >
                 Daha detaylı bilgi almak için tıklayın.
-              </div>
+              </Link>
             </div>
-          </div>
-          <div className="border-2 border-black rounded-3xl px-4 py-2 bg-[#ececec] mt-2">
-            <h2 className="text-center text-2xl font-extrabold text-[#ce636f] border-text">
-              DEPREM ANINDA NE YAPILMALI?
-            </h2>
-            <p className="mt-2 font-semibold">
-              • Sakin olun: Panik yapmak yerine bulunduğunuz yerde güvenli bir
-              pozisyon alın.
-            </p>
-            <p className="font-semibold">
-              • Çök-Kapan-Tutun hareketini uygulayın: Masa altı gibi sağlam bir
-              nesnenin altına girin, başınızı koruyun ve sabit bir yere tutunun.
-            </p>
-            <p className="font-semibold">
-              • Pencerelerden ve devrilebilecek eşyalardan uzak durun.
-            </p>
-            <p className="font-semibold">
-              • Açık alandaysanız, binalardan, elektrik direklerinden ve
-              ağaçlardan uzak durun.
-            </p>
-            <p className="font-semibold">
-              • Asansör kullanmayın. Deprem anında ya da hemen sonrasında
-              asansöre binmek tehlikelidir.
-            </p>
-            <p className="text-red-600 underline font-semibold mt-1">
-              Daha detaylı bilgi almak için tıklayın.
-            </p>
           </div>
         </div>
         <div className="lg:w-1/4 md:w-[49%] w-full z-20 lg:mt-0 mt-3">

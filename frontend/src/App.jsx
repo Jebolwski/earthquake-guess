@@ -18,6 +18,10 @@ import PredictDamage from "./pages/PredictDamage/PredictDamage";
 import PredictionDetail from "./pages/PredictionDetail/PredictionDetail";
 import AddBuildingData from "./pages/AddBuildingData/AddBuildingData";
 import toast, { Toaster } from "react-hot-toast";
+import WhatToDo from "./pages/WhatToDo/WhatToDo";
+import Header from "./components/Header/Header";
+import AuthLayout from "./components/AuthLayout/AuthLayout";
+import MainLayout from "./components/MainLayout/MainLayout";
 
 function App() {
   return (
@@ -38,50 +42,61 @@ function App() {
               theme="light"
             />
             <Routes>
-              <Route
-                path="/register"
-                element={<Register />}
-              />
-              <Route
-                path="/login"
-                element={<Login />}
-              />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/prediciton-detail/:id"
-                element={
-                  <ProtectedRoute>
-                    <PredictionDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/add-building-data"
-                element={
-                  <ProtectedRoute>
-                    <AddBuildingData />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/password-reset"
-                element={<PasswordResetRequest />}
-              />
-              <Route
-                path="/predict-damage"
-                element={<PredictDamage />}
-              />
-              <Route
-                path="/reset-password/confirm/:uid/:token"
-                element={<ResetPasswordConfirm />}
-              />
+              {/* Header olmayan rotalar */}
+              <Route element={<AuthLayout />}>
+                <Route
+                  path="/login"
+                  element={<Login />}
+                />
+                <Route
+                  path="/register"
+                  element={<Register />}
+                />
+                <Route
+                  path="/password-reset"
+                  element={<PasswordResetRequest />}
+                />
+                <Route
+                  path="/reset-password/confirm/:uid/:token"
+                  element={<ResetPasswordConfirm />}
+                />
+              </Route>
+
+              {/* Header olan rotalar */}
+              <Route element={<MainLayout />}>
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Home />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/what-to-do"
+                  element={<WhatToDo />}
+                />
+                <Route
+                  path="/prediciton-detail/:id"
+                  element={
+                    <ProtectedRoute>
+                      <PredictionDetail />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/add-building-data"
+                  element={
+                    <ProtectedRoute>
+                      <AddBuildingData />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/predict-damage"
+                  element={<PredictDamage />}
+                />
+              </Route>
             </Routes>
           </AuthProvider>
         </Router>

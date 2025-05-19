@@ -69,7 +69,7 @@ const BuildingVisualization = ({
 
   return (
     <div className="visualization relative">
-      <h2 className="text-3xl font-extrabold text-[#ce636f] border-text">
+      <h2 className="text-2xl font-extrabold text-[#ce636f] border-text">
         BİNA GÖRÜNÜMÜ
       </h2>
       <div className="relative mt-5 min-h-[400px] w-full flex justify-center items-end border-2 border-black rounded-xl">
