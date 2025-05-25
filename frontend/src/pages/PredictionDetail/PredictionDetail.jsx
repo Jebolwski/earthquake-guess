@@ -1,34 +1,191 @@
 import { useContext, useEffect } from "react";
 import AuthContext from "../../context/context";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const PredictionDetail = () => {
-  const { id } = useParams(); // URL'deki id parametresi
+  const { id } = useParams();
   const { prediction, getAPrediction } = useContext(AuthContext);
 
   useEffect(() => {
     if (id) {
-      getAPrediction(id); // id'yi kullanarak veri çek
+      getAPrediction(id);
     }
   }, [id]);
 
-  console.log(prediction);
+  // Veri çevirileri için sözlük
+  const translations = {
+    "Mud mortar-Stone/Brick": "Çamur harcı-Taş/Tuğla",
+    "Bamboo/Timber-Heavy roof": "Bambu/Ahşap-Ağır çatı",
+    Flat: "Düz",
+    RC: "Betonarme",
+  };
+
+  // Tarih formatını düzenleme
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("tr-TR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Tahmin sonucunu formatlama
+  const formatPrediction = (value) => {
+    if (value === undefined || value === null) return "-";
+    if (value < 1.5) return "Az Riskli";
+    if (value < 2.5) return "Orta Riskli";
+    return "Yüksek Riskli";
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen lg:px-12 px-4 bg-cover bg-[#FED260]">
-      <img
-        src="/src/assets/login.svg"
-        alt="login"
-        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0 select-none"
-      />
-      <div className="border-2 border-black bg-white rounded-xl p-3 z-20">
-        <p>age : {prediction?.building_age}</p>
-        <p>floor_count : {prediction?.building_floor_count}</p>
-        <p>building_height : {prediction?.building_height}</p>
-        <p>building_plinth_area : {prediction?.building_plinth_area}</p>
+    <div className="flex justify-center min-h-[calc(100vh-60px)] px-2 pb-8 bg-gradient-to-b from-[#FED260] to-[#f8f9fa]">
+      <div className="max-w-4xl w-full mt-8 space-y-6">
+        {/* Başlık */}
+        <div className="text-center">
+          <h1 className="lg:text-4xl md:text-3xl text-2xl font-bold text-[#2c3e50] bg-white p-4 rounded-xl shadow-lg border-2 border-[#ce636f]">
+            Bina Deprem Risk Analizi Detayları
+          </h1>
+        </div>
+
+        {/* Bilgi Kartı */}
+        <div className="bg-white rounded-xl shadow-xl p-6 border-2 border-[#ce636f]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Sol Kolon */}
+            <div className="space-y-4">
+              <DetailItem
+                title="Bina Yaşı"
+                value={`${prediction?.building_age || "-"} yıl`}
+                icon="🏛️"
+              />
+              <DetailItem
+                title="Kat Sayısı"
+                value={prediction?.building_floor_count || "-"}
+                icon="🏢"
+              />
+              <DetailItem
+                title="Bina Yüksekliği"
+                value={`${prediction?.building_height * 0.3048 || "-"} m`}
+                icon="📏"
+              />
+              <DetailItem
+                title="Bina Alanı"
+                value={`${
+                  prediction?.building_plinth_area * 0.092903 || "-"
+                } m²`}
+                icon="🔲"
+              />
+              <DetailItem
+                title="Deprem Büyüklüğü"
+                value={prediction?.earthquake_magnitude || "-"}
+                icon="🌍"
+              />
+            </div>
+
+            {/* Sağ Kolon */}
+            <div className="space-y-4">
+              <DetailItem
+                title="Temel Tipi"
+                value={
+                  translations[prediction?.foundation_type] ||
+                  prediction?.foundation_type ||
+                  "-"
+                }
+                icon="🏗️"
+              />
+              <DetailItem
+                title="Çatı Tipi"
+                value={
+                  translations[prediction?.roof_type] ||
+                  prediction?.roof_type ||
+                  "-"
+                }
+                icon="🏠"
+              />
+              <DetailItem
+                title="Zemin Durumu"
+                value={
+                  translations[prediction?.land_surface_condition] ||
+                  prediction?.land_surface_condition ||
+                  "-"
+                }
+                icon="🌱"
+              />
+              <DetailItem
+                title="Zemin Kat Tipi"
+                value={
+                  translations[prediction?.ground_floor_type] ||
+                  prediction?.ground_floor_type ||
+                  "-"
+                }
+                icon="🛠️"
+              />
+              <DetailItem
+                title="Tahmin Tarihi"
+                value={formatDate(prediction?.date_added)}
+                icon="📅"
+              />
+            </div>
+          </div>
+
+          {/* Risk Göstergesi */}
+          <div className="mt-8 p-4 rounded-lg bg-gradient-to-r from-blue-100 via-yellow-100 to-red-100">
+            <div className="text-center">
+              <h3 className="text-2xl font-semibold text-[#2c3e50]">
+                Risk Değerlendirmesi
+              </h3>
+              <div className="flex items-center justify-center mt-2">
+                <span className="text-4xl mr-2">
+                  {prediction?.prediction !== undefined &&
+                  prediction?.prediction !== null
+                    ? prediction.prediction < 1.5
+                      ? "✅"
+                      : prediction.prediction < 2.5
+                      ? "⚠️"
+                      : "❌"
+                    : "-"}
+                </span>
+                <span className="text-3xl font-bold">
+                  {formatPrediction(prediction?.prediction)}
+                </span>
+                {prediction?.prediction && (
+                  <span className="ml-2 text-xl">
+                    ({prediction.prediction.toFixed(2)})
+                  </span>
+                )}
+              </div>
+              <div className="mt-2 text-gray-600">
+                {prediction?.prediction !== undefined &&
+                  prediction?.prediction !== null && (
+                    <>
+                      {prediction.prediction < 1.5
+                        ? "Düşük riskli bina"
+                        : prediction.prediction < 2.5
+                        ? "Orta riskli bina"
+                        : "Yüksek riskli bina"}
+                    </>
+                  )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+// Yardımcı bileşen
+const DetailItem = ({ title, value, icon }) => (
+  <div className="flex items-start">
+    <span className="text-2xl mr-3">{icon}</span>
+    <div>
+      <h4 className="text-lg font-semibold text-[#ce636f]">{title}</h4>
+      <p className="text-xl font-medium text-gray-800">{value}</p>
+    </div>
+  </div>
+);
 
 export default PredictionDetail;

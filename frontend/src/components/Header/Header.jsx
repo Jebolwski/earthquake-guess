@@ -21,15 +21,29 @@ const Header = () => {
             GUERTHQUAKE
           </h1>
         </Link>
-        <div className="font-bold text-xl">
-          {user?.username} ({user?.email})
-        </div>
-        <button
-          onClick={logoutUser}
-          className="bg-red-400 hover:bg-red-500 duration-200 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
-        >
-          Çıkış Yap
-        </button>
+        {user != null ? (
+          <>
+            <div className="font-bold text-xl">
+              {user?.username} ({user?.email})
+            </div>
+            <button
+              onClick={logoutUser}
+              className="bg-red-400 hover:bg-red-500 duration-200 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
+            >
+              Çıkış Yap
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="font-bold text-xl">Misafir</div>
+            <Link
+              to={"/login"}
+              className="bg-red-400 hover:bg-red-500 duration-200 font-semibold text-white border-2 border-black py-1 px-2 rounded-xl shadow-md"
+            >
+              Giriş Yap
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

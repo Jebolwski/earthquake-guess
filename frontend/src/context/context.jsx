@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios"; // API istekleri için
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext({});
 
@@ -13,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [latestPredictions, setLatestPredictions] = useState();
   const [prediction, setPrediction] = useState();
+  const [fullBuildingPrediction, setFullBuildingPrediction] = useState();
   const [fullBuildings, setFullBuildings] = useState();
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("authTokens", JSON.stringify({ access: token })); // Token'ı localStorage'a kaydediyoruz
         setAuthTokens({ access: token }); // authTokens state'ine kaydediyoruz
         await getUserByToken(token); // Token ile kullanıcı bilgilerini alıp setUser ile kaydediyoruz
+        toast.success("Başarıyla giriş yapıldı.");
         navigate("/"); // Giriş başarılıysa home'a yönlendir
       }
     } catch (error) {
@@ -82,7 +85,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Google login error:", error);
-      alert("Google ile giriş yapılamadı!");
     }
   };
 
@@ -101,6 +103,7 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    toast.success("Başarıyla çıkış yapıldı.");
     navigate("/login");
   };
 
@@ -122,11 +125,17 @@ export const AuthProvider = ({ children }) => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
-      const response = await axios.get("/api/latest-predictions/", {
-        headers: {
+      let headers = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken != null) {
+        headers = {
           Authorization: `Token ${accessToken}`,
           "Content-Type": "application/json",
-        },
+        };
+      }
+      const response = await axios.get("/api/latest-predictions/", {
+        headers: headers,
       });
       if (response.status === 200) {
         setLatestPredictions(response.data);
@@ -134,24 +143,27 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Google login error:", error);
-      alert("Google ile giriş yapılamadı!");
     }
   };
 
   const getLatestAddedFullBuildings = async () => {
-    console.log("asldhaslşhd");
-
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
-      const response = await axios.get("/api/latest-full-buildings/", {
-        headers: {
+      let headers = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken != null) {
+        headers = {
           Authorization: `Token ${accessToken}`,
           "Content-Type": "application/json",
-        },
+        };
+      }
+
+      const response = await axios.get("/api/latest-full-buildings/", {
+        headers: headers,
       });
       if (response.status === 200) {
-        console.log(response.data);
         setFullBuildings(response.data);
         navigate("/");
       }
@@ -166,7 +178,6 @@ export const AuthProvider = ({ children }) => {
       const accessToken = authTokens?.access;
 
       if (!accessToken) {
-        alert("Giriş yapmanız gerekiyor.");
         return;
       }
 
@@ -184,7 +195,36 @@ export const AuthProvider = ({ children }) => {
       console.error("Tahminler alınırken hata:", error);
 
       if (error.response?.status === 401) {
-        alert("Yetkisiz erişim. Lütfen tekrar giriş yapın.");
+        return;
+        // İsteğe bağlı: kullanıcıyı login sayfasına yönlendirme
+        // navigate("/login");
+      } else {
+        console.log("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    }
+  };
+
+  const getAPredictionFullBuilding = async (id) => {
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+
+      const response = await axios.get(`/api/get-full-building/${id}`, {
+        headers: {
+          Authorization: `Token ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        setFullBuildingPrediction(response.data);
+      }
+    } catch (error) {
+      console.error("Tahminler alınırken hata:", error);
+
+      if (error.response?.status === 401) {
+        toast.error("Erişim hatası.");
+        return;
         // İsteğe bağlı: kullanıcıyı login sayfasına yönlendirme
         // navigate("/login");
       } else {
@@ -212,8 +252,10 @@ export const AuthProvider = ({ children }) => {
     latestPredictions,
     getAPrediction,
     prediction,
-    getLatestAddedFullBuildings,
+    fullBuildingPrediction,
     fullBuildings,
+    getLatestAddedFullBuildings,
+    getAPredictionFullBuilding,
   };
 
   return (

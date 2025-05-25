@@ -19,6 +19,7 @@ urlpatterns = [
     path('latest-predictions/', views.latest_predictions, name='latest-predictions'),
     path('latest-full-buildings/', views.latest_full_buildings, name='latest-full-buildings'),
     path('get-building/<int:building_id>/', views.get_building_by_id, name='get_building_by_id'),
+    path('get-full-building/<int:building_id>/', views.get_full_building_by_id, name='get_full_building_by_id'),
     # Password Reset
     path('user/password/reset/', views.custom_password_reset, name='custom_password_reset'),
     path('user/password/reset/confirm/<uidb64>/<token>/', views.custom_password_reset_confirm, name='custom_password_reset_confirm'),

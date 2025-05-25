@@ -39,7 +39,12 @@ const AddBuildingData = () => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
-
+      formData["plinth_area_sq_ft"] =
+        formData["plinth_area_sq_ft"] * 10.7639150512;
+      formData["height_ft_pre_eq"] =
+        formData["height_ft_pre_eq"] * 3.28083989501;
+      formData["height_ft_post_eq"] =
+        formData["height_ft_post_eq"] * 3.28083989501;
       const response = await axios.post(
         "http://127.0.0.1:8000/api/save-real-data/",
         formData,
@@ -51,7 +56,22 @@ const AddBuildingData = () => {
         }
       );
 
-      notify(response.data.message);
+      notify("Bina başarıyla kaydedildi. 🎉");
+
+      setFormData({
+        plinth_area_sq_ft: "",
+        magnitude: "",
+        land_surface_condition: "",
+        count_floors_pre_eq: "",
+        count_floors_post_eq: "",
+        height_ft_pre_eq: "",
+        height_ft_post_eq: "",
+        roof_type: "",
+        age_building: "",
+        foundation_type: "",
+        ground_floor_type: "",
+        felt_damage: "",
+      });
     } catch (error) {
       console.error(error);
       alert("Tahmin yapılırken bir hata oluştu");
@@ -65,7 +85,7 @@ const AddBuildingData = () => {
       <img
         src="/src/assets/login.svg"
         alt="login"
-        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0 select-none"
+        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 fixed bottom-0 left-0 select-none"
       />
       <div>
         <div className="flex justify-center">
@@ -85,9 +105,7 @@ const AddBuildingData = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="form-group">
-              <label className="block mb-1 font-medium">
-                Plinth Area (sq ft)
-              </label>
+              <label className="block mb-1 font-medium">Bina Alanı (m²)</label>
               <input
                 type="number"
                 name="plinth_area_sq_ft"
@@ -145,7 +163,7 @@ const AddBuildingData = () => {
 
             <div className="form-group">
               <label className="block mb-1 font-medium">
-                Deprem Öncesi Bina Yüksekliği (ft)
+                Deprem Öncesi Bina Yüksekliği (m)
               </label>
               <input
                 type="number"
@@ -161,7 +179,7 @@ const AddBuildingData = () => {
 
             <div className="form-group">
               <label className="block mb-1 font-medium">
-                Deprem Sonrası Bina Yüksekliği (ft)
+                Deprem Sonrası Bina Yüksekliği (m)
               </label>
               <input
                 type="number"

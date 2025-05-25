@@ -140,16 +140,24 @@ const Home = () => {
                 <Link
                   to={`/prediciton-detail/${data.id}`}
                   key={data.id}
-                  className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
+                  className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex items-center gap-3">
                     <p>BH : {data.building_height}</p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>
                   </div>
-                  <div className="text-green-500 font-bold">
-                    Pred :{" "}
-                    <span className="font-extrabold">
+                  <div className="font-bold">
+                    Pred:{" "}
+                    <span
+                      className={`font-extrabold ${
+                        data.prediction < 1.5
+                          ? "text-green-500"
+                          : data.prediction < 2.5
+                          ? "text-orange-500"
+                          : "text-red-500"
+                      }`}
+                    >
                       {data.prediction.toFixed(2)}
                     </span>
                   </div>
@@ -162,7 +170,7 @@ const Home = () => {
               KAYDEDİLMİŞ VERİLER
             </h2>
             <Link to={"/add-building-data"}>
-              <p className="text-center font-semibold">
+              <p className="text-center font-semibold hover:text-[#ce636f] duration-200">
                 Gireceğiniz veriler ile bize destek olabilirsiniz, tıklayın ve
                 binanızın bilgilerini girerek hasar bilgilerini girin.
               </p>
@@ -170,18 +178,26 @@ const Home = () => {
             {fullBuildings?.map((data) => {
               return (
                 <Link
-                  to={`/prediciton-detail/${data.id}`}
+                  to={`/full-building-prediciton-detail/${data.id}`}
                   key={data.id}
-                  className="flex bg-stone-50 border-2 border-black font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
+                  className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex items-center gap-3">
                     <p>BH : {data.building_height_pre_eq}</p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>
                   </div>
-                  <div className="text-green-500 font-bold">
-                    Pred :{" "}
-                    <span className="font-extrabold">
+                  <div className="font-bold">
+                    Pred:{" "}
+                    <span
+                      className={`font-extrabold ${
+                        data.felt_damage < 1.5
+                          ? "text-green-500"
+                          : data.felt_damage < 2.5
+                          ? "text-orange-500"
+                          : "text-red-500"
+                      }`}
+                    >
                       {data.felt_damage.toFixed(2)}
                     </span>
                   </div>

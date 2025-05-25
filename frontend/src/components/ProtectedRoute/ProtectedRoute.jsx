@@ -1,13 +1,19 @@
-// src/components/ProtectedRoute.jsx
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import AuthContext from "../../context/context";
+import toast from "react-hot-toast";
+
+let toastShown = false;
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
 
   if (user == null && localStorage.getItem("authTokens") == null) {
-    // User yoksa login sayfasına gönder
+    if (!toastShown) {
+      toast.error("Giriş yapmalısınız.");
+      console.log("Giriş yapma uyarısı gösterildi");
+      toastShown = true;
+    }
     return (
       <Navigate
         to="/login"
@@ -16,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // User varsa children'ı göster
+  toastShown = false;
   return children;
 };
 

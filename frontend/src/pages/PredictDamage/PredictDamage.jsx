@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import BuildingVisualization from "../../components/BuildingVisualization/BuildingVisualization";
+import AuthContext from "../../context/context";
+import toast from "react-hot-toast";
 
 const PredictDamage = () => {
+  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     plinth_area_sq_ft: "",
     magnitude: "",
@@ -24,34 +27,85 @@ const PredictDamage = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setShowDamage(false); // Hide damage when form changes
+    setShowDamage(false);
+  };
+
+  const validateForm = () => {
+    const requiredFields = [
+      "plinth_area_sq_ft",
+      "magnitude",
+      "land_surface_condition",
+      "count_floors_pre_eq",
+      "height_ft_pre_eq",
+      "roof_type",
+      "age_building",
+      "foundation_type",
+      "ground_floor_type",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        toast.error(`Lütfen ${fieldToLabel(field)} alanını doldurunuz!`);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const fieldToLabel = (fieldName) => {
+    const labels = {
+      plinth_area_sq_ft: "Bina Alanı",
+      magnitude: "Deprem Şiddeti",
+      land_surface_condition: "Zemin Eğimi",
+      count_floors_pre_eq: "Kat Sayısı",
+      height_ft_pre_eq: "Bina Yüksekliği",
+      roof_type: "Çatı Türü",
+      age_building: "Bina Yaşı",
+      foundation_type: "Temel Türü",
+      ground_floor_type: "Zemin Kat Türü",
+    };
+    return labels[fieldName] || fieldName;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setIsLoading(true);
     setShowDamage(false);
 
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
+      let headers = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken != null) {
+        headers = {
+          Authorization: `Token ${accessToken}`,
+          "Content-Type": "application/json",
+        };
+      }
+
+      formData["plinth_area_sq_ft"] =
+        formData["plinth_area_sq_ft"] * 10.7639150512;
+      formData["height_ft_pre_eq"] =
+        formData["height_ft_pre_eq"] * 3.28083989501;
 
       const response = await axios.post(
         "http://127.0.0.1:8000/api/predict-damage/",
         formData,
-        {
-          headers: {
-            Authorization: `Token ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+        { headers }
       );
 
       setPredictions(response.data);
-      setShowDamage(true); // Show damage after prediction
+      setShowDamage(true);
+
+      toast.success("Tahmin başarıyla tamamlandı!");
     } catch (error) {
       console.error(error);
-      alert("Tahmin yapılırken bir hata oluştu");
+      toast.error("Tahmin yapılırken bir hata oluştu");
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +113,14 @@ const PredictDamage = () => {
 
   const predictAndSave = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (!user) {
+      toast.warning("Bu işlem için giriş yapmalısınız");
+      return;
+    }
+
     setIsLoading(true);
     setShowDamage(false);
 
@@ -78,10 +140,12 @@ const PredictDamage = () => {
       );
 
       setPredictions(response.data.model_predictions);
-      setShowDamage(true); // Show damage after prediction
+      setShowDamage(true);
+
+      toast.success("Tahmin başarıyla kaydedildi!");
     } catch (error) {
       console.error(error);
-      alert("Tahmin yapılırken bir hata oluştu");
+      toast.error("Tahmin kaydedilirken bir hata oluştu");
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +201,7 @@ const PredictDamage = () => {
       <img
         src="/src/assets/login.svg"
         alt="login"
-        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 absolute bottom-0 left-0 select-none"
+        className="w-full lg:scale-[1.0] md:scale-[1.5] sm:scale-[1.75] scale-[2.0] lg:bottom-0 md:bottom-16 sm:bottom-24 bottom-12 fixed bottom-0 left-0 select-none"
       />
       <div>
         <div className="flex justify-center">
@@ -158,9 +222,7 @@ const PredictDamage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="form-group">
-              <label className="block mb-1 font-medium">
-                Plinth Area (sq ft)
-              </label>
+              <label className="block mb-1 font-medium">Bina Alanı (m²)</label>
               <input
                 type="number"
                 name="plinth_area_sq_ft"
@@ -218,7 +280,7 @@ const PredictDamage = () => {
 
             <div className="form-group">
               <label className="block mb-1 font-medium">
-                Bina Yüksekliği (ft)
+                Bina Yüksekliği (m)
               </label>
               <input
                 type="number"
@@ -315,17 +377,27 @@ const PredictDamage = () => {
                 >
                   {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et"}
                 </button>
-                <button
-                  onClick={predictAndSave}
-                  disabled={isLoading}
-                  className={`w-full py-2 px-4 rounded-xl text-white font-semibold text-lg border-2 border-black ${
-                    isLoading
-                      ? "bg-gray-400"
-                      : "bg-cyan-600 hover:bg-cyan-700 duration-200"
-                  }`}
-                >
-                  {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et ve Kaydet"}
-                </button>
+                {user ? (
+                  <button
+                    onClick={predictAndSave}
+                    disabled={isLoading}
+                    className={`w-full py-2 px-4 rounded-xl text-white font-semibold text-lg border-2 border-black ${
+                      isLoading
+                        ? "bg-gray-400"
+                        : "bg-cyan-600 hover:bg-cyan-700 duration-200"
+                    }`}
+                  >
+                    {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et ve Kaydet"}
+                  </button>
+                ) : (
+                  <button
+                    onClick={predictAndSave}
+                    disabled={true}
+                    className={`w-full py-2 bg-gray-400 px-4 rounded-xl text-white font-semibold text-lg border-2 border-black cursor-not-allowed`}
+                  >
+                    {isLoading ? "Tahmin Yapılıyor..." : "Tahmin Et ve Kaydet"}
+                  </button>
+                )}
               </div>
             </div>
           </div>

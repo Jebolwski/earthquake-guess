@@ -272,6 +272,7 @@ import pickle
 import os
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def predict_damage(request):
     land_surface_condition_mapping = {
         'Flat': 0,
@@ -301,7 +302,6 @@ def predict_damage(request):
 
     try:
         data = request.data
-        print("1")
         # Veriyi al
         input_data = [
             float(data['plinth_area_sq_ft']),
@@ -315,23 +315,18 @@ def predict_damage(request):
             ground_floor_type_mapping[data['ground_floor_type']]             # mapping kullan!
         ]
 
-        print("2222")
 
         input_array = np.array(input_data).reshape(1, -1)
 
-        print("2")
         # Modellerin dosyalarını oku
-        models_dir = os.path.join(os.path.dirname(__file__), 'models')  # Modeller burada olsun
+        models_dir = os.path.join(os.path.dirname(__file__), 'models')
         model_files = [
             "RandomForest_model_9features.sav",
             "GradientBoosting_model_9features.sav",
             "DecisionTree_model_9features.sav",
             "KNeighbors_model_9features.sav",
-            "LinearRegression_model_9features.sav",
-            "MLPRegressor_model_9features.sav",
             "AdaBoost_model_9features.sav"
         ]
-        print("3")
 
         predictions = {}
 
@@ -451,14 +446,14 @@ def predict_damage_and_save(request):
     
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def latest_predictions(request):
     buildings = models.Building.objects.all().order_by('-date_added')[:6]  # en son eklenenler en üstte
     serializer = serializers.BuildingSerializer(buildings, many=True)
     return Response(serializer.data, status=200)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def latest_full_buildings(request):
     building_full_datas = models.BuildingFullData.objects.all().order_by('-date_added')[:6]  # en son eklenenler en üstte
     serializer = serializers.BuildingFullDataSerializer(building_full_datas, many=True)
@@ -466,14 +461,26 @@ def latest_full_buildings(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_building_by_id(request, building_id):
     try:
-        building = models.Building.objects.get(id=building_id, user=request.user)  # Kullanıcıya ait mi kontrol edilir
+
+        building = models.Building.objects.get(id=building_id)  # Kullanıcıya ait mi kontrol edilir
     except models.Building.DoesNotExist:
         return Response({'error': 'Building not found'}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = serializers.BuildingSerializer(building)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['GET'])
+def get_full_building_by_id(request, building_id):
+    try:
+        building = models.BuildingFullData.objects.get(id=building_id)  # Kullanıcıya ait mi kontrol edilir
+        print(building,"salkcjhdşaschd")
+    except models.Building.DoesNotExist:
+        return Response({'error': 'Building not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = serializers.BuildingFullDataSerializer(building)
     return Response(serializer.data, status=200)
 
 
