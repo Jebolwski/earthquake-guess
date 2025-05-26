@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import AuthContext from "../../context/context";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const FullBuildingPredictionDetail = () => {
   const { id } = useParams();
@@ -68,6 +69,9 @@ const FullBuildingPredictionDetail = () => {
 
   return (
     <div className="flex justify-center min-h-[calc(100vh-60px)] px-4 pb-8 bg-gradient-to-b from-[#FED260] to-[#f8f9fa]">
+      <Helmet>
+        <title>Bina Deprem Sonrası Hasar Analizi</title>
+      </Helmet>
       <div className="max-w-5xl w-full mt-8 space-y-6">
         {/* Başlık */}
         <div className="text-center">
@@ -126,13 +130,15 @@ const FullBuildingPredictionDetail = () => {
               value={`${
                 (
                   fullBuildingPrediction?.building_plinth_area * 0.092903
-                ).toFixed(2) || "-"
+                ).toFixed(1) || "-"
               } m²`}
               icon="🔲"
             />
             <DetailItem
               title="Deprem Büyüklüğü"
-              value={fullBuildingPrediction?.earthquake_magnitude || "-"}
+              value={
+                (fullBuildingPrediction?.earthquake_magnitude).toFixed(1) || "-"
+              }
               icon="🌍"
             />
             <DetailItem
@@ -202,7 +208,7 @@ const FullBuildingPredictionDetail = () => {
                 value={`${
                   (
                     fullBuildingPrediction?.building_height_pre_eq * 0.3048
-                  ).toFixed(2) || "-"
+                  ).toFixed(1) || "-"
                 } m`}
                 icon="📏"
               />
@@ -228,7 +234,7 @@ const FullBuildingPredictionDetail = () => {
                 title="Bina Yüksekliği"
                 value={`${(
                   fullBuildingPrediction?.building_height_post_eq * 0.3048
-                ).toFixed(2)} m`}
+                ).toFixed(1)} m`}
                 icon="📏"
                 highlightChanges={
                   fullBuildingPrediction?.building_height_pre_eq !==

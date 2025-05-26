@@ -3,6 +3,7 @@ import axios from "axios";
 import BuildingVisualization from "../../components/BuildingVisualization/BuildingVisualization";
 import AuthContext from "../../context/context";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 const PredictDamage = () => {
   const { user } = useContext(AuthContext);
@@ -87,15 +88,16 @@ const PredictDamage = () => {
           "Content-Type": "application/json",
         };
       }
+      let formDataCopy = JSON.parse(JSON.stringify(formData));
 
-      formData["plinth_area_sq_ft"] =
-        formData["plinth_area_sq_ft"] * 10.7639150512;
-      formData["height_ft_pre_eq"] =
-        formData["height_ft_pre_eq"] * 3.28083989501;
+      formDataCopy["plinth_area_sq_ft"] =
+        formDataCopy["plinth_area_sq_ft"] * 10.7639150512;
+      formDataCopy["height_ft_pre_eq"] =
+        formDataCopy["height_ft_pre_eq"] * 3.28083989501;
 
       const response = await axios.post(
         "http://127.0.0.1:8000/api/predict-damage/",
-        formData,
+        formDataCopy,
         { headers }
       );
 
@@ -198,6 +200,9 @@ const PredictDamage = () => {
 
   return (
     <div className="p-6 px-12 mx-auto bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
+      <Helmet>
+        <title>Bina Hasar Tahmini</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"

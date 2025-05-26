@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 function PasswordResetRequest() {
   const [email, setEmail] = useState("");
@@ -26,6 +27,9 @@ function PasswordResetRequest() {
 
   return (
     <div className="flex items-center justify-center h-[100vh] bg-[#FED260] px-4">
+      <Helmet>
+        <title>Şifre Sıfırlama</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"

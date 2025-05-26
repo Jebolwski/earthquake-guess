@@ -13,6 +13,10 @@ const ProtectedRoute = ({ children }) => {
       toast.error("Giriş yapmalısınız.");
       console.log("Giriş yapma uyarısı gösterildi");
       toastShown = true;
+
+      setTimeout(() => {
+        toastShown = false;
+      }, 2000);
     }
     return (
       <Navigate

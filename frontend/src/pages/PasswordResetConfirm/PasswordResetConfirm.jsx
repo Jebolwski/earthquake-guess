@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 const ResetPasswordConfirm = () => {
   const { uid, token } = useParams();
@@ -41,6 +42,9 @@ const ResetPasswordConfirm = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-[#FED260]">
+      <Helmet>
+        <title>Şifre Sıfırlama</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"

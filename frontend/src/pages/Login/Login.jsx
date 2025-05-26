@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const { loginUser, socialLoginUser } = useContext(AuthContext);
@@ -43,6 +44,9 @@ const Login = () => {
 
   return (
     <div className="flex flex-col lg:items-end items-center min-h-screen lg:px-12 px-4 bg-cover bg-[#FED260]">
+      <Helmet>
+        <title>Giriş Yap</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"

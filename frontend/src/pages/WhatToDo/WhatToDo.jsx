@@ -1,6 +1,11 @@
+import { Helmet } from "react-helmet";
+
 const WhatToDo = () => {
   return (
     <div className="px-6 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
+      <Helmet>
+        <title>Deprem Anında Ne Yapılmalı?</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"

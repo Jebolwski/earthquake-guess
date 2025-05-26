@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import AuthContext from "../../context/context";
 import { Link, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const {
@@ -19,6 +20,9 @@ const Home = () => {
 
   return (
     <div className="px-6 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
+      <Helmet>
+        <title>Guerthquake</title>
+      </Helmet>
       <img
         src="/src/assets/clouds.svg"
         alt="clouds1"
@@ -143,7 +147,7 @@ const Home = () => {
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex items-center gap-3">
-                    <p>BH : {data.building_height}</p>
+                    <p>BH : {parseInt(data.building_height / 3.28083989501)}</p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>
                   </div>
@@ -183,7 +187,10 @@ const Home = () => {
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex items-center gap-3">
-                    <p>BH : {data.building_height_pre_eq}</p>
+                    <p>
+                      BH :{" "}
+                      {parseInt(data.building_height_pre_eq / 3.28083989501)}
+                    </p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>
                   </div>

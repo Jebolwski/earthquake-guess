@@ -324,8 +324,6 @@ def predict_damage(request):
             "RandomForest_model_9features.sav",
             "GradientBoosting_model_9features.sav",
             "DecisionTree_model_9features.sav",
-            "KNeighbors_model_9features.sav",
-            "AdaBoost_model_9features.sav"
         ]
 
         predictions = {}
@@ -399,10 +397,6 @@ def predict_damage_and_save(request):
             "RandomForest_model_9features.sav",
             "GradientBoosting_model_9features.sav",
             "DecisionTree_model_9features.sav",
-            "KNeighbors_model_9features.sav",
-            "LinearRegression_model_9features.sav",
-            "MLPRegressor_model_9features.sav",
-            "AdaBoost_model_9features.sav"
         ]
 
         predictions = {}

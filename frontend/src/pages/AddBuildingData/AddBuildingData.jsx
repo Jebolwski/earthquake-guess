@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import BuildingVisualization from "../../components/BuildingVisualization/BuildingVisualization";
 import toast from "react-hot-toast";
-
+import { Helmet } from "react-helmet";
 const AddBuildingData = () => {
   const [formData, setFormData] = useState({
     plinth_area_sq_ft: "",
@@ -39,15 +39,19 @@ const AddBuildingData = () => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
-      formData["plinth_area_sq_ft"] =
-        formData["plinth_area_sq_ft"] * 10.7639150512;
-      formData["height_ft_pre_eq"] =
-        formData["height_ft_pre_eq"] * 3.28083989501;
-      formData["height_ft_post_eq"] =
-        formData["height_ft_post_eq"] * 3.28083989501;
+
+      let formDataCopy = JSON.parse(JSON.stringify(formData));
+
+      formDataCopy["plinth_area_sq_ft"] =
+        formDataCopy["plinth_area_sq_ft"] * 10.7639150512;
+      formDataCopy["height_ft_pre_eq"] =
+        formDataCopy["height_ft_pre_eq"] * 3.28083989501;
+      formDataCopy["height_ft_post_eq"] =
+        formDataCopy["height_ft_post_eq"] * 3.28083989501;
+
       const response = await axios.post(
         "http://127.0.0.1:8000/api/save-real-data/",
-        formData,
+        formDataCopy,
         {
           headers: {
             Authorization: `Token ${accessToken}`,
@@ -82,6 +86,9 @@ const AddBuildingData = () => {
 
   return (
     <div className="p-6 px-12 mx-auto bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
+      <Helmet>
+        <title>Geçmiş Bina Verisi Ekle</title>
+      </Helmet>
       <img
         src="/src/assets/login.svg"
         alt="login"
