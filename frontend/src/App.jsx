@@ -18,7 +18,6 @@ import PredictionDetail from "./pages/PredictionDetail/PredictionDetail";
 import AddBuildingData from "./pages/AddBuildingData/AddBuildingData";
 import { Toaster } from "react-hot-toast";
 import WhatToDo from "./pages/WhatToDo/WhatToDo";
-import Header from "./components/Header/Header";
 import AuthLayout from "./components/AuthLayout/AuthLayout";
 import MainLayout from "./components/MainLayout/MainLayout";
 import FullBuildingPredictionDetail from "./pages/FullBuildingPredictionDetail/FullBuildingPredictionDetail";
@@ -34,7 +33,6 @@ function App() {
         <Router>
           <AuthProvider>
             <Routes>
-              {/* Header olmayan rotalar */}
               <Route element={<AuthLayout />}>
                 <Route
                   path="/login"
@@ -54,7 +52,6 @@ function App() {
                 />
               </Route>
 
-              {/* Header olan rotalar */}
               <Route element={<MainLayout />}>
                 <Route
                   path="/"
@@ -81,7 +78,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/full-building-prediciton-detail/:id"
+                  path="/full-building-prediction-detail/:id"
                   element={
                     <ProtectedRoute>
                       <FullBuildingPredictionDetail />

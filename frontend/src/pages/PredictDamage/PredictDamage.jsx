@@ -160,7 +160,7 @@ const PredictDamage = () => {
     const sum = values.reduce((acc, val) => acc + val, 0);
     const average = sum / values.length;
 
-    return average.toFixed(6);
+    return average.toFixed(2);
   };
 
   const getDamageLevel = () => {

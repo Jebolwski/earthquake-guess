@@ -5,31 +5,25 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from dotenv import load_dotenv
 from django.contrib.auth.models import User
-from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import get_user_model
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import get_user_model
-import jwt
-from django.conf import settings
-from rest_framework.response import Response
-from django.contrib.auth import get_user_model
-from rest_framework import status
 from . import models
 from . import serializers
+import jwt
+from rest_framework.authtoken.models import Token
+import os
+import pickle   
+import numpy as np
 
 load_dotenv()
 
@@ -142,22 +136,22 @@ def logout_view(request):
 @csrf_exempt
 @api_view(['POST'])
 def custom_password_reset(request):
-    # POST isteği ile gelen veriyi alalım (email)
+    
     if request.method == "POST":
-        email = request.data.get('email')  # Kullanıcının email adresi
+        email = request.data.get('email') 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return JsonResponse({"error": "User with that email not found."}, status=404)
 
-        # Kullanıcı bulunursa, reset token ve uid oluşturuyoruz
+
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(str(user.pk).encode('utf-8'))
 
-        # Reset linkini frontend'e uygun formatta hazırlıyoruz
+    
         reset_link = f"{settings.FRONTEND_URL}/reset-password/confirm/{uid}/{token}/"
 
-        # E-posta içeriğini doğrudan string olarak yazıyoruz
+     
         subject = "Password Reset Request"
         message = f"""
         Hello {user.username},
@@ -172,7 +166,7 @@ def custom_password_reset(request):
         Thank you for using our service!
         """
 
-        # E-posta gönderme
+ 
         send_mail(subject, message, 'no-reply@localhost', [email])
 
         return JsonResponse({"message": "Password reset email sent!"}, status=200)
@@ -182,7 +176,6 @@ def custom_password_reset(request):
 @csrf_exempt
 @api_view(['POST'])
 def custom_password_reset_confirm(request, uidb64, token):
-    # Body'den uid ve token alıyoruz
     new_password1 = request.data.get('new_password1')
     new_password2 = request.data.get('new_password2')
 
@@ -192,7 +185,6 @@ def custom_password_reset_confirm(request, uidb64, token):
     if new_password1 != new_password2:
         raise ValidationError("Şifreler eşleşmiyor.")
 
-    # Token ve UID'yi doğrulamak için işlem yapalım
     try:
         uid = urlsafe_base64_decode(uidb64).decode('utf-8')
         user = get_user_model().objects.get(pk=uid)
@@ -202,23 +194,15 @@ def custom_password_reset_confirm(request, uidb64, token):
     if not default_token_generator.check_token(user, token):
         raise ValidationError("Geçersiz token.")
 
-    # Yeni şifreyi ayarlıyoruz
     form = SetPasswordForm(user, request.data)
     if form.is_valid():
         form.save()
-
-        # Kullanıcının oturumunu güncelliyoruz
         update_session_auth_hash(request, user)
-
         return Response({"message": "Şifreniz başarıyla sıfırlandı."}, status=status.HTTP_200_OK)
     else:
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
-import jwt
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -262,15 +246,6 @@ def google_login(request):
     }, status=status.HTTP_200_OK)
 
 
-import os
-import pickle   
-import numpy as np
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-import pickle
-import os
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def predict_damage(request):
@@ -302,23 +277,19 @@ def predict_damage(request):
 
     try:
         data = request.data
-        # Veriyi al
         input_data = [
             float(data['plinth_area_sq_ft']),
             float(data['magnitude']),
-            land_surface_condition_mapping[data['land_surface_condition']],  # mapping kullan!
+            land_surface_condition_mapping[data['land_surface_condition']], 
             int(data['count_floors_pre_eq']),
             float(data['height_ft_pre_eq']),
-            roof_type_mapping[data['roof_type']],                           # mapping kullan!
+            roof_type_mapping[data['roof_type']],                       
             int(data['age_building']),
-            foundation_type_mapping[data['foundation_type']],               # mapping kullan!
-            ground_floor_type_mapping[data['ground_floor_type']]             # mapping kullan!
+            foundation_type_mapping[data['foundation_type']],             
+            ground_floor_type_mapping[data['ground_floor_type']]           
         ]
-
-
         input_array = np.array(input_data).reshape(1, -1)
 
-        # Modellerin dosyalarını oku
         models_dir = os.path.join(os.path.dirname(__file__), 'models')
         model_files = [
             "RandomForest_model_9features.sav",
@@ -329,18 +300,15 @@ def predict_damage(request):
         predictions = {}
 
         for model_file in model_files:
-            print("4")
             model_path = os.path.join(models_dir, model_file)
             with open(model_path, 'rb') as f:
                 model = pickle.load(f)
-            print("5")
             prediction = model.predict(input_array)[0]
             predictions[model_file.replace("_model_9features.sav", "")] = prediction
 
         return Response(predictions, status=200)
 
     except Exception as e:
-        print("6")
         return Response({'error': str(e)}, status=400)
 
 
@@ -483,7 +451,6 @@ def get_full_building_by_id(request, building_id):
 def save_real_data(request):
 
     data = request.data
-    # FullData modeline uygun nesne oluşturuluyor
     building_full = models.BuildingFullData.objects.create(
         user=request.user,
         building_floor_count_pre_eq=data['count_floors_pre_eq'],

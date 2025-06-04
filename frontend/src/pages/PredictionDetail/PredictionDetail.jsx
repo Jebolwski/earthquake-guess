@@ -15,10 +15,29 @@ const PredictionDetail = () => {
 
   // Veri çevirileri için sözlük
   const translations = {
-    "Mud mortar-Stone/Brick": "Çamur harcı-Taş/Tuğla",
+    // Çatı Tipi
+    "Bamboo/Timber-Light roof": "Bambu/Ahşap-Hafif çatı",
     "Bamboo/Timber-Heavy roof": "Bambu/Ahşap-Ağır çatı",
-    Flat: "Düz",
+    "RCC/RB/RBC": "Betonarme",
+
+    // Temel Tipi
+    Other: "Diğer",
+    "Mud mortar-Stone/Brick": "Çamur harcı-Taş/Tuğla",
+    "Cement-Stone/Brick": "Çimento harcı-Taş/Tuğla",
+    "Bamboo/Timber": "Bambu/Ahşap",
     RC: "Betonarme",
+
+    // Zemin Durumu
+    "Moderate slope": "Orta eğimli",
+    Flat: "Düz",
+    "Steep slope": "Dik eğimli",
+
+    // Zemin Kat Tipi
+    Mud: "Toprak",
+    RC: "Betonarme",
+    "Brick/Stone": "Tuğla/Taş",
+    Timber: "Ahşap",
+    Other: "Diğer",
   };
 
   // Tarih formatını düzenleme

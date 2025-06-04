@@ -182,7 +182,7 @@ const Home = () => {
             {fullBuildings?.map((data) => {
               return (
                 <Link
-                  to={`/full-building-prediciton-detail/${data.id}`}
+                  to={`/full-building-prediction-detail/${data.id}`}
                   key={data.id}
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >

@@ -137,7 +137,7 @@ const FullBuildingPredictionDetail = () => {
             <DetailItem
               title="Deprem Büyüklüğü"
               value={
-                (fullBuildingPrediction?.earthquake_magnitude).toFixed(1) || "-"
+                fullBuildingPrediction?.earthquake_magnitude?.toFixed(1) || "-"
               }
               icon="🌍"
             />
