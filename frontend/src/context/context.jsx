@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [latestPredictions, setLatestPredictions] = useState();
+  const [usersLatestPredictions, setUsersLatestPredictions] = useState();
+  const [usersLatestAddedBuildings, setUsersLatestAddedBuildings] = useState();
   const [prediction, setPrediction] = useState();
   const [fullBuildingPrediction, setFullBuildingPrediction] = useState();
   const [fullBuildings, setFullBuildings] = useState();
@@ -233,6 +235,72 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getUsersLastThreePredictions = async () => {
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+
+      const response = await axios.get(
+        `/api/get_users_last_three_predictions/`,
+        {
+          headers: {
+            Authorization: `Token ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setUsersLatestPredictions(response.data);
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Tahminler alınırken hata:", error);
+
+      if (error.response?.status === 401) {
+        toast.error("Erişim hatası.");
+        return;
+        // İsteğe bağlı: kullanıcıyı login sayfasına yönlendirme
+        // navigate("/login");
+      } else {
+        console.log("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    }
+  };
+
+  const getUsersLastThreeAddedBuildings = async () => {
+    try {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const accessToken = authTokens?.access;
+
+      const response = await axios.get(
+        `/api/get_users_last_tree_added_buildings/`,
+        {
+          headers: {
+            Authorization: `Token ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setUsersLatestAddedBuildings(response.data);
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Tahminler alınırken hata:", error);
+
+      if (error.response?.status === 401) {
+        toast.error("Erişim hatası.");
+        return;
+        // İsteğe bağlı: kullanıcıyı login sayfasına yönlendirme
+        // navigate("/login");
+      } else {
+        console.log("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    }
+  };
+
   useEffect(() => {
     if (authTokens) {
       getUserByToken(authTokens.access);
@@ -256,6 +324,10 @@ export const AuthProvider = ({ children }) => {
     fullBuildings,
     getLatestAddedFullBuildings,
     getAPredictionFullBuilding,
+    getUsersLastThreePredictions,
+    getUsersLastThreeAddedBuildings,
+    usersLatestPredictions,
+    usersLatestAddedBuildings,
   };
 
   return (

@@ -446,6 +446,30 @@ def get_full_building_by_id(request, building_id):
     return Response(serializer.data, status=200)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users_last_tree_predicted_buildings(request):
+    user = request.user
+    
+    # Kullanıcının tahmin ettiği binaları created_at'e göre ters sırala, son 5'ü al
+    last_buildings = models.Building.objects.filter(user=user).order_by('-date_added')[:5]
+
+    serializer = serializers.BuildingSerializer(last_buildings, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users_last_tree_added_buildings(request):
+    user = request.user
+    
+    # Kullanıcının tahmin ettiği binaları created_at'e göre ters sırala, son 5'ü al
+    last_buildings = models.BuildingFullData.objects.filter(user=user).order_by('-date_added')[:5]
+
+    serializer = serializers.BuildingFullDataSerializer(last_buildings, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def save_real_data(request):

@@ -18,6 +18,8 @@ urlpatterns = [
     path('predict-damage-and-save/', views.predict_damage_and_save, name='predict-damage-and-save'),
     path('latest-predictions/', views.latest_predictions, name='latest-predictions'),
     path('latest-full-buildings/', views.latest_full_buildings, name='latest-full-buildings'),
+    path('get_users_last_three_predictions/', views.get_users_last_tree_predicted_buildings, name='get-users-last-three-predictions'),
+    path('get_users_last_tree_added_buildings/', views.get_users_last_tree_added_buildings, name='get_users_last_tree_added_buildings'),
     path('get-building/<int:building_id>/', views.get_building_by_id, name='get_building_by_id'),
     path('get-full-building/<int:building_id>/', views.get_full_building_by_id, name='get_full_building_by_id'),
     # Password Reset

@@ -11,12 +11,20 @@ const Home = () => {
     latestPredictions,
     getLatestAddedFullBuildings,
     fullBuildings,
+    getUsersLastThreePredictions,
+    usersLatestPredictions,
+    getUsersLastThreeAddedBuildings,
+    usersLatestAddedBuildings,
   } = useContext(AuthContext);
 
   useEffect(() => {
     getLatestPredictions();
     getLatestAddedFullBuildings();
+    getUsersLastThreePredictions();
+    getUsersLastThreeAddedBuildings();
   }, []);
+
+  console.log(usersLatestPredictions);
 
   return (
     <div className="px-6 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
@@ -26,17 +34,17 @@ const Home = () => {
       <img
         src="/src/assets/clouds.svg"
         alt="clouds1"
-        className="w-fit absolute left-6 top-16 z-10"
+        className="w-fit fixed left-6 top-16 z-10"
       />
       <img
         src="/src/assets/clouds.svg"
         alt="clouds2"
-        className="w-fit absolute right-0 bottom-12 z-10"
+        className="w-fit fixed right-0 bottom-12 z-10"
       />
       <img
         src="/src/assets/left-bottom-home.svg"
         alt="clouds2"
-        className="w-fit absolute left-0 bottom-0 z-10"
+        className="w-fit fixed left-0 bottom-0 z-10"
       />
       <img
         src="/src/assets/clouds.svg"
@@ -96,6 +104,45 @@ const Home = () => {
               </Link>
             </div>
           </div>
+          {usersLatestPredictions && usersLatestPredictions.length > 0 ? (
+            <div className="border-2 border-black rounded-3xl px-4 py-2 bg-[#ececec] mt-2">
+              <h2 className="text-center text-2xl font-extrabold text-[#ce636f] border-text">
+                YAPTIĞINIZ SON TAHMİNLER
+              </h2>
+
+              {usersLatestPredictions?.map((data) => {
+                return (
+                  <Link
+                    to={`/prediciton-detail/${data.id}`}
+                    key={data.id}
+                    className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
+                  >
+                    <div className="flex items-center gap-3">
+                      <p>
+                        BH : {parseInt(data.building_height / 3.28083989501)}
+                      </p>
+                      <p>BA : {data.building_age}</p>
+                      <p>MAG : {data.earthquake_magnitude}</p>
+                    </div>
+                    <div className="font-bold">
+                      Pred:{" "}
+                      <span
+                        className={`font-extrabold ${
+                          data.prediction < 1.5
+                            ? "text-green-500"
+                            : data.prediction < 2.5
+                            ? "text-orange-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.prediction.toFixed(2)}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
         <div className="lg:w-1/4 md:w-[49%] w-full z-20 lg:mt-0 mt-3">
           <div className="border-2 border-black rounded-3xl px-4 py-2 bg-[#ececec]">
@@ -130,6 +177,46 @@ const Home = () => {
               </Link> */}
             </div>
           </div>
+          {usersLatestAddedBuildings && usersLatestAddedBuildings.length > 0 ? (
+            <div className="border-2 border-black rounded-3xl px-4 py-2 bg-[#ececec] mt-2">
+              <h2 className="text-center text-2xl font-extrabold text-[#ce636f] border-text">
+                EKLEDİĞİNİZ SON BİNALAR
+              </h2>
+
+              {usersLatestAddedBuildings?.map((data) => {
+                return (
+                  <Link
+                    to={`/full-building-prediction-detail/${data.id}`}
+                    key={data.id}
+                    className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
+                  >
+                    <div className="flex items-center gap-3">
+                      <p>
+                        BH :{" "}
+                        {parseInt(data.building_height_pre_eq / 3.28083989501)}
+                      </p>
+                      <p>BA : {data.building_age}</p>
+                      <p>MAG : {data.earthquake_magnitude}</p>
+                    </div>
+                    <div className="font-bold">
+                      Pred:{" "}
+                      <span
+                        className={`font-extrabold ${
+                          data.felt_damage < 1.5
+                            ? "text-green-500"
+                            : data.felt_damage < 2.5
+                            ? "text-orange-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.felt_damage.toFixed(2)}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
         <div className="lg:w-4/12 md:w-[49%] w-full z-20 lg:mt-0 mt-3">
           <div className="border-2 border-black rounded-3xl p-2 bg-[#ececec]">
