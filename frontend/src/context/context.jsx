@@ -239,20 +239,20 @@ export const AuthProvider = ({ children }) => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
-
-      const response = await axios.get(
-        `/api/get_users_last_three_predictions/`,
-        {
+      if (accessToken) {
+        const response = await axios.get(`/api/get_users_last_predictions/`, {
           headers: {
             Authorization: `Token ${accessToken}`,
             "Content-Type": "application/json",
           },
-        }
-      );
+        });
 
-      if (response.status === 200) {
-        setUsersLatestPredictions(response.data);
-        console.log(response);
+        if (response.status === 200) {
+          setUsersLatestPredictions(response.data);
+          console.log(response);
+        }
+      } else {
+        setUsersLatestPredictions(null);
       }
     } catch (error) {
       console.error("Tahminler alınırken hata:", error);
@@ -272,20 +272,23 @@ export const AuthProvider = ({ children }) => {
     try {
       const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const accessToken = authTokens?.access;
+      if (accessToken) {
+        const response = await axios.get(
+          `/api/get_users_last_added_buildings/`,
+          {
+            headers: {
+              Authorization: `Token ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      const response = await axios.get(
-        `/api/get_users_last_tree_added_buildings/`,
-        {
-          headers: {
-            Authorization: `Token ${accessToken}`,
-            "Content-Type": "application/json",
-          },
+        if (response.status === 200) {
+          setUsersLatestAddedBuildings(response.data);
+          console.log(response);
         }
-      );
-
-      if (response.status === 200) {
-        setUsersLatestAddedBuildings(response.data);
-        console.log(response);
+      } else {
+        setUsersLatestAddedBuildings(null);
       }
     } catch (error) {
       console.error("Tahminler alınırken hata:", error);

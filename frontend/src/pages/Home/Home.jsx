@@ -24,10 +24,8 @@ const Home = () => {
     getUsersLastThreeAddedBuildings();
   }, []);
 
-  console.log(usersLatestPredictions);
-
   return (
-    <div className="px-6 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
+    <div className="lg:px-6 px-3 py-4 bg-[#FED260] min-h-[calc(100vh-60px)] font-raleway">
       <Helmet>
         <title>Guerthquake</title>
       </Helmet>
@@ -117,9 +115,12 @@ const Home = () => {
                     key={data.id}
                     className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <p>
-                        BH : {parseInt(data.building_height / 3.28083989501)}
+                        BH :{" "}
+                        {parseFloat(
+                          data.building_height / 3.28083989501
+                        ).toFixed(1)}
                       </p>
                       <p>BA : {data.building_age}</p>
                       <p>MAG : {data.earthquake_magnitude}</p>
@@ -190,10 +191,12 @@ const Home = () => {
                     key={data.id}
                     className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <p>
                         BH :{" "}
-                        {parseInt(data.building_height_pre_eq / 3.28083989501)}
+                        {parseFloat(
+                          data.building_height_pre_eq / 3.28083989501
+                        ).toFixed(1)}
                       </p>
                       <p>BA : {data.building_age}</p>
                       <p>MAG : {data.earthquake_magnitude}</p>
@@ -233,8 +236,13 @@ const Home = () => {
                   key={data.id}
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
-                  <div className="flex items-center gap-3">
-                    <p>BH : {parseInt(data.building_height / 3.28083989501)}</p>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <p>
+                      BH :{" "}
+                      {parseFloat(data.building_height / 3.28083989501).toFixed(
+                        1
+                      )}
+                    </p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>
                   </div>
@@ -273,10 +281,12 @@ const Home = () => {
                   key={data.id}
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <p>
                       BH :{" "}
-                      {parseInt(data.building_height_pre_eq / 3.28083989501)}
+                      {parseFloat(
+                        data.building_height_pre_eq / 3.28083989501
+                      ).toFixed(2)}
                     </p>
                     <p>BA : {data.building_age}</p>
                     <p>MAG : {data.earthquake_magnitude}</p>

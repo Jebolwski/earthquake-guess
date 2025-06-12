@@ -73,16 +73,10 @@ const BuildingVisualization = ({
         BİNA GÖRÜNÜMÜ
       </h2>
       <div className="relative mt-5 min-h-[400px] w-full flex justify-center items-end border-2 border-black rounded-xl">
-        {/* Nature Background */}
         <div className="absolute inset-0 overflow-hidden z-0 rounded-xl">
-          {/* Sky */}
           <div className="absolute inset-0 bg-gradient-to-b from-blue-300 to-blue-500"></div>
-
-          {/* Sun */}
           <div className="absolute top-8 right-8 w-16 h-16 bg-yellow-300 rounded-full shadow-lg"></div>
           <div className="absolute top-8 right-8 w-16 h-16 bg-yellow-200 rounded-full animate-pulse opacity-70"></div>
-
-          {/* Trees */}
           <div className="absolute bottom-0 left-4">
             <div className="w-6 h-20 bg-brown-600 bg-[#8B4513] ml-4"></div>
             <div className="w-16 h-16 bg-green-600 rounded-full absolute top-0 left-3 -mt-12 -ml-4"></div>
@@ -92,17 +86,13 @@ const BuildingVisualization = ({
             <div className="w-20 h-20 bg-green-700 absolute top-0 left-3 rounded-full -mt-10 -ml-7"></div>
           </div>
 
-          {/* Clouds */}
           <div className="absolute top-16 left-16 w-24 h-8 bg-white rounded-full"></div>
           <div className="absolute top-20 left-32 w-16 h-6 bg-white rounded-full"></div>
         </div>
 
-        {/* Building Container */}
         <div className="flex flex-col items-center relative z-10">
-          {/* Damage effects overlay */}
           {getDamageEffects()}
 
-          {/* Only show intact building if not heavily damaged */}
           {(!damageLevel || parseFloat(damageLevel) < 2.5) && (
             <>
               {/* Roof */}
@@ -239,17 +229,14 @@ const BuildingVisualization = ({
             </>
           )}
 
-          {/* Age indicator */}
           <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 text-xs text-gray-700 z-20">
-            {age} years old
+            {age} yaşında
           </div>
 
-          {/* Plinth area */}
           <div className="absolute bottom-[-25px] text-xs text-gray-700 z-20">
-            {plinth} sq ft
+            {plinth} m²
           </div>
 
-          {/* Ground */}
           <div
             className="ground rounded-t-md"
             style={{

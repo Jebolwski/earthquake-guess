@@ -245,7 +245,6 @@ const FullBuildingPredictionDetail = () => {
           </div>
         </div>
 
-        {/* Teknik Değerlendirme */}
         <div className="bg-white rounded-xl shadow-xl p-6 border-2 border-[#ce636f]">
           <h2 className="text-2xl font-bold text-[#ce636f] mb-4">
             Teknik Değerlendirme
@@ -290,30 +289,25 @@ const DetailItem = ({ title, value, icon, highlightChanges = false }) => (
   </div>
 );
 
-// Bina dayanıklılık analizi fonksiyonu
 const getBuildingResilienceAnalysis = (data) => {
   if (!data) return "Veri yükleniyor...";
 
   let analysis = [];
 
-  // Temel tipi analizi
   if (data.foundation_type === "Cement-Stone/Brick") {
     analysis.push("Çimento harçlı temel nispeten dayanıklı");
   } else {
     analysis.push("Temel tipi deprem için yeterince dayanıklı değil");
   }
 
-  // Çatı tipi analizi
   if (data.roof_type === "Bamboo/Timber-Heavy roof") {
     analysis.push("Ağır çatı yapısı risk oluşturuyor");
   }
 
-  // Zemin eğimi analizi
   if (data.land_surface_condition === "Steep slope") {
     analysis.push("Dik eğimli zemin depremde risk faktörü");
   }
 
-  // Hasar derecesine göre ek analiz
   if (data.felt_damage >= 2.0) {
     analysis.push("Bina ağır hasar almış, acil müdahale gerekli");
   } else if (data.felt_damage >= 1.5) {
@@ -325,7 +319,6 @@ const getBuildingResilienceAnalysis = (data) => {
   return analysis.join(". ") + ".";
 };
 
-// Öneriler fonksiyonu
 const getRecommendations = (data) => {
   if (!data) return "";
 
