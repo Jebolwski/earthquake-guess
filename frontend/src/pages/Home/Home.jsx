@@ -116,15 +116,36 @@ const Home = () => {
                     className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                   >
                     <div className="flex flex-wrap items-center gap-3">
-                      <p>
-                        BH :{" "}
-                        {parseFloat(
-                          data.building_height / 3.28083989501
-                        ).toFixed(1)}
-                      </p>
-                      <p>BA : {data.building_age}</p>
-                      <p>MAG : {data.earthquake_magnitude}</p>
+                      {/* YK Tooltip */}
+                      <div className="relative group">
+                        <p>
+                          Yükseklik:{" "}
+                          {parseFloat(
+                            data.building_height / 3.28083989501
+                          ).toFixed(1)}
+                        </p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                          Bina Yüksekliği (metre)
+                        </div>
+                      </div>
+
+                      {/* YŞ Tooltip */}
+                      <div className="relative group">
+                        <p>Yaş: {data.building_age}</p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                          Bina Yaşı
+                        </div>
+                      </div>
+
+                      {/* BY Tooltip */}
+                      <div className="relative group">
+                        <p>Deprem: {data.earthquake_magnitude}</p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                          Deprem Büyüklüğü
+                        </div>
+                      </div>
                     </div>
+
                     <div className="font-bold">
                       Pred:{" "}
                       <span
@@ -192,15 +213,36 @@ const Home = () => {
                     className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                   >
                     <div className="flex flex-wrap items-center gap-3">
-                      <p>
-                        BH :{" "}
-                        {parseFloat(
-                          data.building_height_pre_eq / 3.28083989501
-                        ).toFixed(1)}
-                      </p>
-                      <p>BA : {data.building_age}</p>
-                      <p>MAG : {data.earthquake_magnitude}</p>
+                      {/* YK Tooltip */}
+                      <div className="relative group">
+                        <p>
+                          Yükseklik:{" "}
+                          {parseFloat(
+                            data.building_height_pre_eq / 3.28083989501
+                          ).toFixed(1)}
+                        </p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                          Bina Yüksekliği (metre)
+                        </div>
+                      </div>
+
+                      {/* YŞ Tooltip */}
+                      <div className="relative group">
+                        <p>Yaş: {data.building_age}</p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                          Bina Yaşı
+                        </div>
+                      </div>
+
+                      {/* BY Tooltip */}
+                      <div className="relative group">
+                        <p>Deprem : {data.earthquake_magnitude}</p>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                          Deprem Büyüklüğü
+                        </div>
+                      </div>
                     </div>
+
                     <div className="font-bold">
                       Pred:{" "}
                       <span
@@ -237,15 +279,36 @@ const Home = () => {
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <p>
-                      BH :{" "}
-                      {parseFloat(data.building_height / 3.28083989501).toFixed(
-                        1
-                      )}
-                    </p>
-                    <p>BA : {data.building_age}</p>
-                    <p>MAG : {data.earthquake_magnitude}</p>
+                    {/* YK Tooltip */}
+                    <div className="relative group">
+                      <p>
+                        Yükseklik:{" "}
+                        {parseFloat(
+                          data.building_height / 3.28083989501
+                        ).toFixed(1)}
+                      </p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                        Bina Yüksekliği (metre)
+                      </div>
+                    </div>
+
+                    {/* YŞ Tooltip */}
+                    <div className="relative group">
+                      <p>Yaş: {data.building_age}</p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                        Bina Yaşı
+                      </div>
+                    </div>
+
+                    {/* BY Tooltip */}
+                    <div className="relative group">
+                      <p>Deprem: {data.earthquake_magnitude}</p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-10 whitespace-nowrap">
+                        Deprem Büyüklüğü
+                      </div>
+                    </div>
                   </div>
+
                   <div className="font-bold">
                     Pred:{" "}
                     <span
@@ -282,15 +345,36 @@ const Home = () => {
                   className="flex bg-stone-50 border-2 border-[#e5e7eb] font-semibold px-2 py-1 cursor-pointer rounded-xl items-center justify-between mt-2"
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <p>
-                      BH :{" "}
-                      {parseFloat(
-                        data.building_height_pre_eq / 3.28083989501
-                      ).toFixed(2)}
-                    </p>
-                    <p>BA : {data.building_age}</p>
-                    <p>MAG : {data.earthquake_magnitude}</p>
+                    {/* YK Tooltip */}
+                    <div className="relative group">
+                      <p>
+                        Yükseklik:{" "}
+                        {parseFloat(
+                          data.building_height_pre_eq / 3.28083989501
+                        ).toFixed(2)}
+                      </p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                        Bina Yüksekliği (metre)
+                      </div>
+                    </div>
+
+                    {/* YŞ Tooltip */}
+                    <div className="relative group">
+                      <p>Yaş: {data.building_age}</p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                        Bina Yaşı
+                      </div>
+                    </div>
+
+                    {/* BY Tooltip */}
+                    <div className="relative group">
+                      <p>Deprem: {data.earthquake_magnitude}</p>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex bg-black text-white text-xs px-2 py-1 rounded-md z-20 whitespace-nowrap">
+                        Deprem Büyüklüğü
+                      </div>
+                    </div>
                   </div>
+
                   <div className="font-bold">
                     Pred:{" "}
                     <span
